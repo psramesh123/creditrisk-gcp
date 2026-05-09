@@ -1,0 +1,38 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project data and artifacts (kept out of git for size and licensing reasons)
+data/
+artifacts/*.joblib
+
+# Logs
+*.log
+
+# Environment files (NEVER commit these — they contain credentials)
+.env
+.env.local
+*.env
+
+# Service account keys and credentials (NEVER commit)
+*-service-account.json
+service-account-*.json
+credentials.json
+key.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS-specific
+.cloudshell/

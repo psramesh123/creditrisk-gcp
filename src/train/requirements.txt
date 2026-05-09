@@ -1,0 +1,34 @@
+# ============================================================================
+# requirements.txt — credit risk training and scoring
+#
+# Install:
+#   pip install -r src/train/requirements.txt
+#
+# Tested with Python 3.12 on Google Cloud Shell.
+#
+# Version floors are intentional:
+#   - scikit-learn >= 1.6 is required for sklearn.frozen.FrozenEstimator,
+#     used in train.py to keep the base XGBoost model frozen during
+#     isotonic calibration. Earlier versions used cv="prefit" which was
+#     removed in 1.6.
+#   - google-cloud-bigquery-storage enables the BigQuery Storage API path
+#     in to_dataframe(create_bqstorage_client=True), giving 2-5x faster
+#     downloads for medium result sets.
+# ============================================================================
+ 
+# ----- Google Cloud -----
+google-cloud-bigquery>=3.20.0
+google-cloud-bigquery-storage>=2.24.0
+ 
+# ----- Data handling -----
+pandas>=2.0.0
+numpy>=1.24.0
+pyarrow>=14.0.0          # required by BigQuery Storage API for Arrow transport
+db-dtypes>=1.2.0         # required for BigQuery -> pandas DATE / TIME / NUMERIC mapping
+ 
+# ----- Modelling -----
+scikit-learn>=1.6.0      # FrozenEstimator requires 1.6+
+xgboost>=2.0.0           # early_stopping_rounds as constructor arg requires 2.0+
+ 
+# ----- Serialization -----
+joblib>=1.3.0
