@@ -20,16 +20,16 @@ queryable history of every run.
 Trained on full Lending Club public dataset (~1.3M loans, issued through
 2017-12-01) using a strict time-based train / valid / test split.
 
------------------------------------------------
-| Metric | VALID | TEST |
------------------------------------------------
-| ROC-AUC | 0.6969 | 0.7063 |
+
+| Metric | VALID | **TEST** |
+|---|---|---|
+| ROC-AUC | 0.6969 | **0.7063** |
 | PR-AUC | 0.4347 | 0.4539 |
 | Brier score | 0.1758 | 0.1792 |
 | Base default rate | ~26% | ~28% |
 | Top 5% default rate | 0.578 | 0.585 |
 | Top 5% recall | 11.0% | 10.6% |
-| Lift @ 5% | 2.19× | 2.12× |
+| **Lift @ 5%** | 2.19× | **2.12×** |
 
 `Lift@5% = top 5% default rate / population base rate` — the top 5% of loans
 ranked by predicted PD default at ~2.1× the population rate, which is useful
@@ -179,21 +179,6 @@ chmod +x run_monitoring.sh
 ---
 
 ## Looker Studio dashboard
-
-Pages:
-- **Executive Summary** — VALID vs TEST headline KPIs (ROC-AUC, PR-AUC,
-  Brier, base rate)
-- **Lift / Recall Performance** — Lift@1 / 5 / 10 and Recall@1 / 5 / 10
-- **Score Drift** — p50 / p90 / p99 of predicted PD by `issue_month`
-- **Feature Drift** — selectable feature; numeric stats or categorical
-  share / entropy
-- **Alerts** — severity, type, month, observed value vs. threshold
-
-Recommended interactive controls:
-- `model_version` dropdown
-- `split` dropdown (valid / test)
-- `feature_name` dropdown (Feature Drift page)
-
 
 Five-page Looker Studio dashboard surfacing model performance and monitoring,
 backed by BigQuery `_latest` views.
