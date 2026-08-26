@@ -36,3 +36,5 @@ key.json
 
 # OS-specific
 .cloudshell/
+runs/
+artifacts/

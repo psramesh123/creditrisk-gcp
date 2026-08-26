@@ -73,6 +73,18 @@ CAT_COLS = [
     "emp_length",
 ]
 
+FEATURE_SET = os.environ.get("FEATURE_SET", "full")
+LC_COLS = {"grade", "interest_rate"}
+
+if FEATURE_SET == "no_lc":
+    NUM_COLS = [c for c in NUM_COLS if c not in LC_COLS]
+    CAT_COLS = [c for c in CAT_COLS if c not in LC_COLS]
+elif FEATURE_SET == "lc_only":
+    NUM_COLS = [c for c in NUM_COLS if c in LC_COLS]
+    CAT_COLS = [c for c in CAT_COLS if c in LC_COLS]
+
+print(f"FEATURE_SET={FEATURE_SET} | NUM_COLS={NUM_COLS} | CAT_COLS={CAT_COLS}")
+
 LABEL_COL = "label"
 SPLIT_COL = "split"
 
@@ -157,6 +169,9 @@ def compute_metrics(y_true: np.ndarray, p: np.ndarray) -> dict:
 
 
 def write_metrics_to_bigquery(metrics: dict, split_name: str, model_version: str):
+    if os.environ.get("SKIP_BQ_METRICS", "0") == "1":
+        print(f"[skip] BigQuery metrics write for {split_name}")
+        return
     client = bigquery.Client(project=PROJECT_ID)
     table_id = f"{PROJECT_ID}.{BQ_DATASET}.model_metrics"
 

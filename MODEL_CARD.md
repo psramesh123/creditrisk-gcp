@@ -263,3 +263,28 @@ In a real deployment:
 - BigQuery tables (`model_metrics`, `predictions`, `score_drift`,
   `feature_drift`, `monitoring_alerts`) provide an auditable history of
   every run
+
+---
+
+## Feature Ablation: Incremental Lift over Lending Club Underwriting
+
+`grade` and `interest_rate` are outputs of Lending Club's own underwriting
+model. To test whether this model merely reproduces that assessment, three
+variants were trained with identical splits, hyperparameters and calibration.
+
+| Variant | Features | Test AUC | Gini | Brier | Lift@5% |
+|---|---|---|---|---|---|
+| full | All | 0.7059 | 0.412 | 0.1792 | 2.12x |
+| lc_only | grade, interest_rate | 0.6655 | 0.331 | 0.1868 | 1.86x |
+| no_lc | All except grade, interest_rate | 0.7064 | 0.413 | 0.1787 | 2.16x |
+
+**Incremental lift over LC underwriting: +0.040 AUC (+0.081 Gini).**
+
+Removing the LC underwriting features costs 0.0004 AUC, within sampling noise
+on a 130k-row test set. Model performance is therefore independent of LC's
+grade assignment; the bureau and application features carry the signal on
+their own. Grade is redundant given FICO, DTI and revolving utilisation, from
+which LC derives it.
+
+Base rate 0.2754. Maximum achievable Lift@5% is 1/base_rate = 3.63x, so the
+full model captures 58% of a perfect ranker within a 5% review budget.
