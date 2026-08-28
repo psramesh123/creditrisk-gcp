@@ -200,6 +200,17 @@ backed by BigQuery `_latest` views.
 
 ---
 
+### Calibration
+
+![Reliability diagram](docs/reliability_diagram.png)
+
+Isotonic calibration reduces test Brier from X to Y. Boosted trees rank well
+but produce distorted probabilities; since the model output feeds an expected
+loss calculation (PD x LGD x EAD), probability quality matters as much as
+rank order.
+
+---
+
 ## Methodology highlights
 
 - **Calibration via `FrozenEstimator` (sklearn ≥ 1.6).** The base XGBoost
