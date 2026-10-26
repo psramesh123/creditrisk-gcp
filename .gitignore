@@ -38,3 +38,8 @@ key.json
 .cloudshell/
 runs/
 artifacts/
+
+# Power BI project: local-only cache and settings (the .pbip, Report and SemanticModel folders are committed)
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+powerbi/data/

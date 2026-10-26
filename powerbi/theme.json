@@ -1,0 +1,23 @@
+{
+  "name": "Credit Risk Monitoring",
+  "dataColors": ["#4F86EC", "#2E3A8C", "#D9453B", "#A6C060", "#EF9534", "#9E9E9E"],
+  "background": "#FFFFFF",
+  "foreground": "#212121",
+  "tableAccent": "#4F86EC",
+  "good": "#A6C060",
+  "neutral": "#EF9534",
+  "bad": "#D9453B",
+  "textClasses": {
+    "title": { "fontFace": "Segoe UI Semibold", "fontSize": 14, "color": "#212121" },
+    "header": { "fontFace": "Segoe UI Semibold", "fontSize": 12, "color": "#212121" },
+    "label": { "fontFace": "Segoe UI", "fontSize": 10, "color": "#424242" },
+    "callout": { "fontFace": "Segoe UI Light", "fontSize": 28, "color": "#212121" }
+  },
+  "visualStyles": {
+    "tableEx": {
+      "*": {
+        "columnHeaders": [{ "backColor": { "solid": { "color": "#EAF1FD" } }, "bold": true }]
+      }
+    }
+  }
+}

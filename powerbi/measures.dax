@@ -1,0 +1,139 @@
+// DAX measures for the Power BI dashboard.
+//
+// Create a table to hold them: Home > Enter data > name it "_Measures" > Load.
+// Then for each block below: select _Measures, Modeling > New measure, paste.
+// Set the format listed in each comment (Measure tools > Format).
+//
+// Text comparisons in DAX are case-insensitive, so "critical" matches CRITICAL.
+
+
+// ---------------------------------------------------------------------------
+// Executive Summary: KPI cards pinned to the TEST split
+// ---------------------------------------------------------------------------
+
+ROC AUC (Test) =
+CALCULATE ( MAX ( model_metrics[roc_auc] ), Split[split] = "test" )
+// format: decimal, 3 places
+
+Brier (Test) =
+CALCULATE ( MAX ( model_metrics[brier] ), Split[split] = "test" )
+// format: decimal, 3 places
+
+Lift @ 5% (Test) =
+CALCULATE ( MAX ( rollups[lift_at_5pct] ), Split[split] = "test" )
+// format: custom  0.00"×"
+
+Recall @ 5% (Test) =
+CALCULATE ( MAX ( rollups[recall_at_5pct] ), Split[split] = "test" )
+// format: percentage, 1 place
+
+Loans Evaluated (Test) =
+CALCULATE ( SUM ( rollups[n] ), Split[split] = "test" )
+// format: whole number, thousands separator
+
+Model Version =
+"Latest model version: " & MAX ( model_metrics[model_version] )
+
+
+// ---------------------------------------------------------------------------
+// Rollup table (Executive Summary + Lift/Recall pages). One row per split,
+// so these follow the Split slicer / table row.
+// ---------------------------------------------------------------------------
+
+Loans = SUM ( rollups[n] )
+// format: whole number, thousands separator
+
+Base Rate = AVERAGE ( rollups[base_rate] )
+// format: percentage, 2 places
+
+Top 5% Default Rate = AVERAGE ( rollups[top_5pct_default_rate] )
+// format: percentage, 2 places
+
+Lift @ 1% = AVERAGE ( rollups[lift_at_1pct] )
+// format: custom  0.00"×"
+
+Lift @ 5% = AVERAGE ( rollups[lift_at_5pct] )
+// format: custom  0.00"×"
+
+Lift @ 10% = AVERAGE ( rollups[lift_at_10pct] )
+// format: custom  0.00"×"
+
+Recall @ 5% = AVERAGE ( rollups[recall_at_5pct] )
+// format: percentage, 1 place
+
+Recall @ 10% = AVERAGE ( rollups[recall_at_10pct] )
+// format: percentage, 1 place
+
+
+// ---------------------------------------------------------------------------
+// Lift / Recall charts (topk table, axis = topk[K] sorted by topk[k_order])
+// ---------------------------------------------------------------------------
+
+Lift @ K = AVERAGE ( topk[lift] )
+// format: decimal, 2 places
+
+Recall @ K = AVERAGE ( topk[recall] )
+// format: percentage, 2 places
+
+
+// ---------------------------------------------------------------------------
+// Score Drift (axis = Month[month_start] or Month[issue_month])
+// ---------------------------------------------------------------------------
+
+Mean PD = AVERAGE ( score_drift[avg_pd] )
+// format: percentage, 2 places
+
+Median PD (p50) = AVERAGE ( score_drift[p50] )
+// format: percentage, 2 places
+
+PD p90 = AVERAGE ( score_drift[p90] )
+// format: percentage, 2 places
+
+PD p99 = AVERAGE ( score_drift[p99] )
+// format: percentage, 2 places
+
+Loans Scored = SUM ( score_drift[n] )
+// format: whole number, thousands separator
+
+
+// ---------------------------------------------------------------------------
+// Feature Drift (filtered by the Feature and Split slicers)
+// ---------------------------------------------------------------------------
+
+Feature Mean = AVERAGE ( feature_drift[mean] )
+// format: decimal, 2 places
+
+Feature Std Dev = AVERAGE ( feature_drift[std] )
+// format: decimal, 2 places
+
+Null Rate = AVERAGE ( feature_drift[null_rate] )
+// format: percentage, 1 place
+
+Top Category Share = AVERAGE ( feature_drift[top_category_share] )
+// format: percentage, 1 place
+
+Entropy = AVERAGE ( feature_drift[entropy] )
+// format: decimal, 3 places
+
+Feature Loans = SUM ( feature_drift[n] )
+// format: whole number, thousands separator
+
+
+// ---------------------------------------------------------------------------
+// Alerts (+ 0 shows 0 instead of a blank card when there are none)
+// ---------------------------------------------------------------------------
+
+Critical Alerts =
+CALCULATE ( COUNTROWS ( alerts ), alerts[severity] = "critical" ) + 0
+
+Warning Alerts =
+CALCULATE ( COUNTROWS ( alerts ), alerts[severity] = "warn" ) + 0
+
+Info Alerts =
+CALCULATE ( COUNTROWS ( alerts ), alerts[severity] = "info" ) + 0
+
+Alert Count = COUNTROWS ( alerts ) + 0
+
+// Card background colour via conditional formatting > Field value
+Critical Card Colour = IF ( [Critical Alerts] > 0, "#D9453B", "#9E9E9E" )
+Warning Card Colour = IF ( [Warning Alerts] > 0, "#EF9534", "#9E9E9E" )
