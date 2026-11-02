@@ -76,9 +76,18 @@ CAT_COLS = [
 FEATURE_SET = os.environ.get("FEATURE_SET", "full")
 LC_COLS = {"grade", "interest_rate"}
 
+# installment is fixed by loan_amount, interest_rate and term_months (the
+# annuity formula), so a model given amount + installment + term can recover
+# the interest rate, and with it Lending Club's grade. "no_lc_strict" drops
+# installment too, closing that route. See src/explain/implied_rate_check.py.
+LC_STRICT_COLS = LC_COLS | {"installment"}
+
 if FEATURE_SET == "no_lc":
     NUM_COLS = [c for c in NUM_COLS if c not in LC_COLS]
     CAT_COLS = [c for c in CAT_COLS if c not in LC_COLS]
+elif FEATURE_SET == "no_lc_strict":
+    NUM_COLS = [c for c in NUM_COLS if c not in LC_STRICT_COLS]
+    CAT_COLS = [c for c in CAT_COLS if c not in LC_STRICT_COLS]
 elif FEATURE_SET == "lc_only":
     NUM_COLS = [c for c in NUM_COLS if c in LC_COLS]
     CAT_COLS = [c for c in CAT_COLS if c in LC_COLS]
