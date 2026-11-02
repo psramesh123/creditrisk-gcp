@@ -90,14 +90,18 @@ creditrisk-gcp/
 │       ├── 10_alert_score_p90.sql
 │       ├── 11_alert_numeric_mean.sql
 │       └── 12_alert_categorical_share.sql
-└── src/
-    ├── ingest/
-    │   └── upload_and_load.py # CSV → BigQuery
-    └── train/
-        ├── train.py           # train + calibrate + write metrics
-        ├── score_to_bigquery.py
-        ├── evaluate.py
-        └── requirements.txt
+├── src/
+│   ├── ingest/
+│   │   └── upload_and_load.py # CSV → BigQuery
+│   ├── train/
+│   │   ├── train.py           # train + calibrate + write metrics
+│   │   ├── score_to_bigquery.py
+│   │   ├── evaluate.py
+│   │   └── requirements.txt
+│   └── explain/
+│       └── reason_codes.py    # SHAP reason codes for declined applicants
+└── tests/
+    └── test_reason_codes.py   # synthetic end-to-end check (no BigQuery)
 ```
 
 ---
@@ -233,12 +237,55 @@ rank order.
 
 ---
 
+## Reason codes for declined applicants
+
+A lender that declines an application has to tell the applicant the main
+reasons. `src/explain/reason_codes.py` generates those reasons from the model.
+
+1. **Decide who is declined.** Score applicants with the calibrated model and
+   decline those above a PD cut-off (`PD_CUTOFF`) or the riskiest share
+   (`DECLINE_RATE`, default 10%, a stand-in for a business-set cut-off).
+2. **Explain each score.** Exact TreeSHAP via XGBoost's built-in
+   `pred_contribs`, on the base model's log-odds. Isotonic calibration is
+   monotone, so it never changes which way a feature pushes risk.
+3. **Fold one-hot columns back** into their original feature (SHAP values are
+   additive, so this is exact).
+4. **Group and translate.** Related features become one reason (e.g.
+   `fico_low` + `fico_high` → "Credit score is lower than for approved
+   applicants"), across 14 reason codes.
+5. **Exclude non-applicant factors.** Lending Club's grade, interest rate and
+   listing type are the lender's own assessment, not facts about the
+   applicant, so they are never reported.
+6. **Report the top four reasons** that pushed each declined applicant's risk up.
+
+**Built-in checks:** contributions must add up to the model's output; share
+of each explanation falling on non-reportable features; share of declines
+with no reportable reason; and whether each feature moves risk in the
+expected direction (e.g. higher DTI → higher risk).
+
+**Which model:** reason codes use the model trained without grade and interest
+rate (`FEATURE_SET=no_lc`). In the feature ablation it matched the full model
+on test AUC (0.7064 vs 0.7059), and every reason it gives describes the
+applicant. With the full model, the grade absorbs much of the explanation.
+
+```bash
+FEATURE_SET=no_lc ARTIFACT_DIR=artifacts/no_lc python src/train/train.py
+ARTIFACT_PATH=artifacts/no_lc/model.joblib SCORE_SPLIT=test \
+    python src/explain/reason_codes.py      # writes artifacts/reason_codes/
+python tests/test_reason_codes.py           # synthetic end-to-end check, no BigQuery needed
+```
+
+<!-- TODO: add results from the real no_lc run (non-reportable share, most common first reason, direction check) -->
+
+---
+
 ## Limitations
 This is a portfolio / demonstration project. It is **not** intended for
 production underwriting decisions. Notably:
 
 - No fairness / disparate-impact evaluation
-- No model explainability surface (SHAP, feature importance reports)
+- Explainability is limited to per-applicant reason codes; no global
+  feature-importance report or monotonic constraints yet
 - No challenger model or A/B framework
 - Manual model versioning (timestamps, no git SHA linkage or model registry)
 - Training runs on Cloud Shell; production should use Vertex AI custom jobs
