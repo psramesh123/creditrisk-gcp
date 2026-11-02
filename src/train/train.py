@@ -213,9 +213,18 @@ def write_metrics_to_bigquery(metrics: dict, split_name: str, model_version: str
         "top_10pct_recall": metrics.get("recall_at_10pct"),
     }
 
-    errors = client.insert_rows_json(table_id, [row])
-    if errors:
-        raise RuntimeError(f"BigQuery insert errors: {errors}")
+    # Use a load job, not a streaming insert: the BigQuery free tier (sandbox)
+    # rejects streaming inserts but allows load jobs.
+    job_config = bigquery.LoadJobConfig(
+        schema=schema,
+        write_disposition=bigquery.WriteDisposition.WRITE_APPEND,
+    )
+    try:
+        client.load_table_from_json([row], table_id, job_config=job_config).result()
+        print(f"Wrote {split_name} metrics to {table_id}")
+    except Exception as e:
+        # A failed metrics write should not lose a finished training run.
+        print(f"WARNING: could not write {split_name} metrics to BigQuery: {e}")
 
 
 def main():
