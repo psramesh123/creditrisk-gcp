@@ -36,6 +36,7 @@ Environment variables
     PD_CUTOFF       decline if calibrated PD >= this value
     DECLINE_RATE    otherwise, decline the riskiest fraction (0.10)
     TOP_K           reasons per applicant                  (4)
+    SEPARATE_TERM   "1" reports loan term as a separate note, not a reason (1)
     MIN_LOGODDS     smallest contribution worth reporting  (0.02)
     OUT_DIR         where outputs are written              (artifacts/reason_codes)
     WRITE_BQ        "1" to also write to BigQuery
@@ -72,6 +73,7 @@ TOP_K = int(os.environ.get("TOP_K", "4"))
 MIN_LOGODDS = float(os.environ.get("MIN_LOGODDS", "0.02"))
 OUT_DIR = os.environ.get("OUT_DIR", "artifacts/reason_codes")
 WRITE_BQ = os.environ.get("WRITE_BQ", "0") == "1"
+SEPARATE_TERM = os.environ.get("SEPARATE_TERM", "1") == "1"
 
 
 # ---------------------------------------------------------------------------
@@ -122,6 +124,15 @@ REASON_TEXT = {
 }
 
 NON_REPORTABLE = {"lc_assessment", "listing_type"}
+
+# Loan term is a product choice, not a fact about the applicant's credit, and
+# it dominates the ranking (60-month loans default far more often). By default
+# it is reported as a separate note, so the reasons describe credit factors.
+TERM_GROUP = "loan_term"
+SHORT_TERM = 36
+# Features whose values depend on the term itself; with any of these in the
+# model, re-scoring at 36 months would need them recomputed, so it is skipped.
+TERM_DEPENDENT = {"installment", "interest_rate", "grade"}
 
 # Expected direction of each numeric feature's effect on risk (+1 = more risk
 # as the value rises). Used only for the sanity check.
@@ -200,8 +211,10 @@ def group_contributions(phi_feat: pd.DataFrame) -> pd.DataFrame:
     return phi_feat.T.groupby(groups).sum().T
 
 
-def top_reasons(phi_group: pd.DataFrame, k: int, min_logodds: float) -> pd.DataFrame:
-    reportable = [g for g in phi_group.columns if g not in NON_REPORTABLE and g in REASON_TEXT]
+def top_reasons(phi_group: pd.DataFrame, k: int, min_logodds: float,
+                exclude: frozenset = frozenset()) -> pd.DataFrame:
+    reportable = [g for g in phi_group.columns
+                  if g not in NON_REPORTABLE and g not in exclude and g in REASON_TEXT]
     vals = phi_group[reportable]
     rows = []
     for idx, r in vals.iterrows():
@@ -280,12 +293,48 @@ def run(artifact: dict, df: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
     phi_group = group_contributions(phi_feat)
 
     # 3. Reasons for declined applicants only
-    reasons = top_reasons(phi_group[declined], TOP_K, MIN_LOGODDS)
+    exclude = frozenset({TERM_GROUP}) if SEPARATE_TERM else frozenset()
+    reasons = top_reasons(phi_group[declined], TOP_K, MIN_LOGODDS, exclude)
     out = df.loc[declined, ["loan_id"]].copy()
     if "issue_date" in df.columns:
         out["issue_date"] = df.loc[declined, "issue_date"]
+    if "term_months" in df.columns:
+        out["term_months"] = df.loc[declined, "term_months"]
     out["p_default"] = p[declined].round(4)
     out = out.join(reasons)
+
+    # 3b. Term note: did the requested term push this applicant's risk up, and
+    #     would the same applicant be approved on a 36-month term?
+    term_summary = {}
+    if SEPARATE_TERM and TERM_GROUP in phi_group.columns:
+        term_phi = phi_group.loc[declined, TERM_GROUP]
+        term_hit = term_phi > MIN_LOGODDS
+        out["term_logodds"] = term_phi.round(4)
+        out["term_note"] = np.where(term_hit, "Longer repayment term increased risk", "")
+
+        can_rescore = "term_months" in num_cols and not (TERM_DEPENDENT & set(num_cols + cat_cols))
+        if can_rescore:
+            X_short = X.loc[declined].copy()
+            X_short["term_months"] = SHORT_TERM
+            p_short = model.predict_proba(X_short)[:, 1]
+            longer = df.loc[declined, "term_months"].to_numpy() > SHORT_TERM
+            qualifies = longer & (p_short < cutoff)
+            out["p_default_36m"] = np.where(longer, p_short.round(4), np.nan)
+            out["qualifies_at_36m"] = qualifies
+            out.loc[qualifies, "term_note"] = (
+                f"Counter-offer: would qualify on a {SHORT_TERM}-month term"
+            )
+            term_summary["share_declined_qualifying_at_36m"] = round(float(qualifies.mean()), 4)
+        else:
+            term_summary["rescore_at_36m"] = (
+                "skipped: model uses a term-dependent feature (installment, rate or grade)"
+            )
+        term_summary["share_declined_with_term_note"] = round(float(term_hit.mean()), 4)
+        if "term_months" in df.columns:
+            term_summary["share_declined_on_longer_term"] = round(
+                float((df.loc[declined, "term_months"] > SHORT_TERM).mean()), 4)
+            term_summary["share_all_on_longer_term"] = round(
+                float((df["term_months"] > SHORT_TERM).mean()), 4)
 
     # 4. Diagnostics
     abs_g = phi_group[declined].abs()
@@ -314,6 +363,8 @@ def run(artifact: dict, df: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
         "nonreportable_share_of_explanation": round(float(nonrep_share), 4),
         "reason_1_frequency": {k: float(v) for k, v in first_freq.items()},
         "reason_in_top_k_frequency": {k: float(v) for k, v in any_freq.items()},
+        "term_reported_separately": SEPARATE_TERM,
+        "term": term_summary,
         "direction_check": direction_check(X, phi_feat),
     }
     return out, summary

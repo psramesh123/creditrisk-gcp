@@ -99,7 +99,8 @@ creditrisk-gcp/
 │   │   ├── evaluate.py
 │   │   └── requirements.txt
 │   └── explain/
-│       └── reason_codes.py    # SHAP reason codes for declined applicants
+│       ├── reason_codes.py    # SHAP reason codes for declined applicants
+│       └── implied_rate_check.py  # tests whether interest rate is recoverable
 └── tests/
     └── test_reason_codes.py   # synthetic end-to-end check (no BigQuery)
 ```
@@ -252,30 +253,70 @@ reasons. `src/explain/reason_codes.py` generates those reasons from the model.
    additive, so this is exact).
 4. **Group and translate.** Related features become one reason (e.g.
    `fico_low` + `fico_high` → "Credit score is lower than for approved
-   applicants"), across 14 reason codes.
+   applicants").
 5. **Exclude non-applicant factors.** Lending Club's grade, interest rate and
    listing type are the lender's own assessment, not facts about the
    applicant, so they are never reported.
-6. **Report the top four reasons** that pushed each declined applicant's risk up.
+6. **Report the top four credit reasons** that pushed each applicant's risk up.
+7. **Report loan term separately.** Term is a product choice, not a credit
+   fact. Each declined 60-month applicant is re-scored at 36 months; if the
+   PD then falls below the cut-off, the output records a counter-offer
+   ("would qualify on a 36-month term") instead of a decline reason.
 
 **Built-in checks:** contributions must add up to the model's output; share
 of each explanation falling on non-reportable features; share of declines
 with no reportable reason; and whether each feature moves risk in the
 expected direction (e.g. higher DTI → higher risk).
 
-**Which model:** reason codes use the model trained without grade and interest
-rate (`FEATURE_SET=no_lc`). In the feature ablation it matched the full model
-on test AUC (0.7064 vs 0.7059), and every reason it gives describes the
-applicant. With the full model, the grade absorbs much of the explanation.
+### What the reason codes uncovered: an interest-rate leak
+
+The first run used a model trained without `grade` and `interest_rate`.
+Its direction check flagged `loan_amount` *lowering* risk. The cause:
+`installment` is set by the annuity formula from loan amount, interest rate
+and term, so a model that sees amount, installment and term can solve for
+the interest rate, and through it the grade.
+
+`src/explain/implied_rate_check.py` confirmed it on the test set: the rate
+recovered from amount, installment and term matched Lending Club's
+`interest_rate` with correlation 1.00 and a median error of 0.0007
+percentage points, rising steadily from ~7% (grade A) to ~31% (grade G).
+
+The ablation was rerun with `installment` also removed (`no_lc_strict`):
+
+| Variant | Features | Test AUC | Lift@5% |
+|---|---|---|---|
+| full | All | 0.7059 | 2.12× |
+| no_lc | All except grade, interest rate | 0.7064 | 2.16× |
+| **no_lc_strict** | **All except grade, interest rate, installment** | **0.6975** | **2.13×** |
+| lc_only | Grade, interest rate | 0.6655 | 1.86× |
+
+The leak was worth about 0.009 AUC. With no route to Lending Club's grade,
+the model still beats the grade alone by **+0.032 AUC**. Reason codes use
+the `no_lc_strict` model; after the fix, `loan_amount` raises risk as expected.
+
+### Results (test set, `no_lc_strict`, 10% decline rule)
+
+- 17,037 of 147,389 applicants declined (11.6%; isotonic calibration creates
+  ties at the cut-off); 52.5% of them defaulted, vs ~28% overall
+- Additivity error 1.4e-05; every declined applicant gets at least one reason
+- 1.4% of the explanation falls on non-reportable features
+- Direction check passes for FICO, DTI, income, loan amount, revolving
+  utilisation, inquiries, public records and credit history. `delinq_2yrs`
+  is near zero (−0.08): most borrowers have no past delinquencies
+- **Loan term dominates.** 60-month loans are 25% of applicants but 88% of
+  declines, and default at 38.6% vs 23.8% for 36-month loans. Before term
+  was reported separately, it was the first reason for 84% of declines,
+  which is why it is now a separate note
+
+<!-- TODO: add reason_1 frequency and share qualifying at 36 months from the rerun with the term note -->
 
 ```bash
-FEATURE_SET=no_lc ARTIFACT_DIR=artifacts/no_lc python src/train/train.py
-ARTIFACT_PATH=artifacts/no_lc/model.joblib SCORE_SPLIT=test \
+python src/explain/implied_rate_check.py    # interest-rate leak check
+FEATURE_SET=no_lc_strict ARTIFACT_DIR=artifacts/no_lc_strict python src/train/train.py
+ARTIFACT_PATH=artifacts/no_lc_strict/model.joblib SCORE_SPLIT=test \
     python src/explain/reason_codes.py      # writes artifacts/reason_codes/
 python tests/test_reason_codes.py           # synthetic end-to-end check, no BigQuery needed
 ```
-
-<!-- TODO: add results from the real no_lc run (non-reportable share, most common first reason, direction check) -->
 
 ---
 
@@ -286,6 +327,13 @@ production underwriting decisions. Notably:
 - No fairness / disparate-impact evaluation
 - Explainability is limited to per-applicant reason codes; no global
   feature-importance report or monotonic constraints yet
+- **Unequal observation windows.** A loan counts as a default if it defaulted
+  at any point, so 60-month loans have five years to default and 36-month
+  loans three. Part of the 60-month risk gap may come from this. Production
+  models use a fixed performance window (e.g. default within 24 months) and
+  often separate models per term
+- The 10% decline rule is a stand-in; a real cut-off would come from expected
+  loss vs interest income or the lender's risk appetite
 - No challenger model or A/B framework
 - Manual model versioning (timestamps, no git SHA linkage or model registry)
 - Training runs on Cloud Shell; production should use Vertex AI custom jobs

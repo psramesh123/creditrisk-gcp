@@ -84,16 +84,33 @@ def build_like_train_py(train, valid, num_cols, cat_cols):
     return {"model": cal, "model_version": "synthetic", "num_cols": num_cols, "cat_cols": cat_cols}
 
 
+DROP = {
+    "full": set(),
+    "no_lc": {"grade", "interest_rate"},
+    "no_lc_strict": {"grade", "interest_rate", "installment"},
+}
+
+
 def check(feature_set):
-    lc = {"grade", "interest_rate"}
-    num = [c for c in NUM_COLS if feature_set == "full" or c not in lc]
-    cat = [c for c in CAT_COLS if feature_set == "full" or c not in lc]
+    num = [c for c in NUM_COLS if c not in DROP[feature_set]]
+    cat = [c for c in CAT_COLS if c not in DROP[feature_set]]
     art = build_like_train_py(fake_loans(20000, 1), fake_loans(5000, 2), num, cat)
     out, s = rc.run(art, fake_loans(5000, 3))
 
     assert s["additivity_max_error"] < 1e-3, s["additivity_max_error"]
     codes = set(out.filter(like="_code").stack().dropna())
     assert codes <= {v[0] for v in rc.REASON_TEXT.values()}  # grade/rate never reported
+
+    # Term is reported as a note, never as one of the reasons.
+    assert "R10" not in codes
+    assert "term_note" in out.columns
+    if feature_set == "no_lc_strict":
+        # No term-dependent feature, so applicants can be re-scored at 36 months.
+        assert "qualifies_at_36m" in out.columns
+        assert not out.loc[out["term_months"] == 36, "qualifies_at_36m"].any()
+        assert (out.loc[out["qualifies_at_36m"], "p_default_36m"] <= s["pd_cutoff"]).all()  # both rounded to 4 dp
+    else:
+        assert "qualifies_at_36m" not in out.columns
 
     if feature_set == "full":
         # The grade absorbs explanation that should belong to applicant facts.
@@ -102,7 +119,7 @@ def check(feature_set):
         assert s["nonreportable_share_of_explanation"] < 0.1
         assert s["share_declined_with_no_reportable_reason"] < 0.01
         top = max(s["reason_1_frequency"], key=s["reason_1_frequency"].get)
-        assert top in {"R01", "R02", "R03", "R05", "R10"}, top  # a planted driver
+        assert top in {"R01", "R02", "R03", "R05"}, top  # a planted credit driver
         for f in ["fico_low", "dti", "inq_last_6mths"]:
             assert s["direction_check"][f]["consistent"], (f, s["direction_check"][f])
 
@@ -112,6 +129,7 @@ def check(feature_set):
     print(f"  non-reportable share      {s['nonreportable_share_of_explanation']}")
     print(f"  mean reasons per decline  {s['mean_reasons_per_decline']}")
     print(f"  reason_1 frequency        {s['reason_1_frequency']}")
+    print(f"  term                      {s['term']}")
     print("  sample:")
     cols = ["loan_id", "p_default", "reason_1_text", "reason_1_logodds",
             "reason_2_text", "reason_3_text"]
@@ -122,4 +140,5 @@ if __name__ == "__main__":
     os.environ.setdefault("DECLINE_RATE", "0.10")
     check("full")
     check("no_lc")
+    check("no_lc_strict")
     print("\nAll checks passed.")

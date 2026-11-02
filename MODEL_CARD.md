@@ -277,14 +277,24 @@ variants were trained with identical splits, hyperparameters and calibration.
 | full | All | 0.7059 | 0.412 | 0.1792 | 2.12x |
 | lc_only | grade, interest_rate | 0.6655 | 0.331 | 0.1868 | 1.86x |
 | no_lc | All except grade, interest_rate | 0.7064 | 0.413 | 0.1787 | 2.16x |
+| no_lc_strict | All except grade, interest_rate, installment | 0.6975 | 0.395 | 0.1804 | 2.13x |
 
 **Incremental lift over LC underwriting: +0.040 AUC (+0.081 Gini).**
 
-Removing the LC underwriting features costs 0.0004 AUC, within sampling noise
-on a 130k-row test set. Model performance is therefore independent of LC's
-grade assignment; the bureau and application features carry the signal on
-their own. Grade is redundant given FICO, DTI and revolving utilisation, from
-which LC derives it.
+**Correction: `no_lc` was not independent of LC's grade.** `installment` is
+determined by loan amount, interest rate and term (the annuity formula), so
+`no_lc` could reconstruct the interest rate, and through it the grade.
+`src/explain/implied_rate_check.py` recovers the rate from amount,
+installment and term with correlation 1.00 (median error 0.0007 percentage
+points). The near-zero cost of dropping grade and rate (0.0004 AUC) therefore
+did not show independence.
+
+With `installment` also removed (`no_lc_strict`), there is no route to the
+grade. That model still beats the grade alone by **+0.032 AUC** (0.6975 vs
+0.6655), so applicant and bureau features carry most of the signal on their
+own; LC's grade adds about 0.008 AUC on top (full vs no_lc_strict). The
+differences are from single runs on one test set and have not yet been
+tested with a paired bootstrap.
 
 Base rate 0.2754. Maximum achievable Lift@5% is 1/base_rate = 3.63x, so the
 full model captures 58% of a perfect ranker within a 5% review budget.
