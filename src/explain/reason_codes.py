@@ -349,6 +349,7 @@ def run(artifact: dict, df: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
 
     summary = {
         "model_version": artifact.get("model_version"),
+        "model_git_sha": artifact.get("git_sha"),
         "split": SPLIT,
         "rows_scored": int(len(df)),
         "pd_cutoff": round(cutoff, 4),

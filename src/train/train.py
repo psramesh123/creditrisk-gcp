@@ -1,6 +1,7 @@
 import os
 import json
 import time
+import subprocess
 import joblib
 import numpy as np
 import pandas as pd
@@ -13,6 +14,8 @@ from sklearn.calibration import CalibratedClassifierCV
 from sklearn.metrics import roc_auc_score, average_precision_score, brier_score_loss
 from xgboost import XGBClassifier
 from sklearn.frozen import FrozenEstimator
+
+from validate import validate_splits, enforce
 
 
 # ----------------------------
@@ -236,6 +239,23 @@ def write_metrics_to_bigquery(metrics: dict, split_name: str, model_version: str
         print(f"WARNING: could not write {split_name} metrics to BigQuery: {e}")
 
 
+def git_info() -> dict:
+    """Commit the model was trained from, and whether there were uncommitted edits."""
+    here = os.path.dirname(os.path.abspath(__file__))
+
+    def git(*args):
+        return subprocess.run(["git", *args], cwd=here, capture_output=True,
+                              text=True, check=True).stdout.strip()
+
+    try:
+        return {
+            "git_sha": git("rev-parse", "HEAD"),
+            "git_dirty": bool(git("status", "--porcelain", "--untracked-files=no")),
+        }
+    except Exception:
+        return {"git_sha": None, "git_dirty": None}
+
+
 def main():
     os.makedirs(ARTIFACT_DIR, exist_ok=True)
 
@@ -252,6 +272,22 @@ def main():
     if len(test_df) == 0:
         print("WARNING: test split is empty. Ensure your SQL splitting logic creates 'test'.")
         print("Proceeding with train+valid only (evaluation will skip test).")
+
+    # Validate the data before spending time on training
+    if os.environ.get("SKIP_VALIDATION", "0") == "1":
+        print("[skip] data validation")
+        validation = {"skipped": True}
+    else:
+        validation = validate_splits(
+            {"train": train_df, "valid": valid_df, "test": test_df},
+            NUM_COLS, CAT_COLS, limited=limit is not None,
+        )
+        enforce(validation, os.path.join(ARTIFACT_DIR, "validation_report.json"))
+
+    git = git_info()
+    if git["git_dirty"]:
+        print(f"WARNING: training from commit {git['git_sha'][:7]} with uncommitted changes; "
+              "this model cannot be exactly reproduced from git.")
 
     # Separate X/y
     X_train = train_df[NUM_COLS + CAT_COLS]
@@ -294,6 +330,8 @@ def main():
 
     # Version stamp
     model_version = time.strftime("%Y%m%d-%H%M%S")
+    if git["git_sha"]:
+        model_version += f"-{git['git_sha'][:7]}{'-dirty' if git['git_dirty'] else ''}"
 
     # Evaluate on valid (and test if exists)
     print("Evaluating...")
@@ -324,9 +362,14 @@ def main():
         "best iteration": int(classifier.best_iteration),
         "valid_metrics": valid_metrics,
         "test_metrics": test_metrics,
+        "feature_set": FEATURE_SET,
+        "git_sha": git["git_sha"],
+        "git_dirty": git["git_dirty"],
+        "validation": validation,
     }
     joblib.dump(artifact, MODEL_PATH)
-    print(f"Saved model artifact to {MODEL_PATH}")
+    print(f"Saved model artifact to {MODEL_PATH} "
+          f"(commit {(git['git_sha'] or 'unknown')[:7]}{', dirty' if git['git_dirty'] else ''})")
 
 
 if __name__ == "__main__":
