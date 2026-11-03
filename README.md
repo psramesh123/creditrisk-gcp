@@ -308,7 +308,16 @@ the `no_lc_strict` model; after the fix, `loan_amount` raises risk as expected.
   was reported separately, it was the first reason for 84% of declines,
   which is why it is now a separate note
 
-<!-- TODO: add reason_1 frequency and share qualifying at 36 months from the rerun with the term note -->
+- **With term reported separately**, the first reason is spread across
+  credit factors: loan or payment high relative to income (28%), debt-to-income
+  (21%), credit score (20%), revolving utilisation (10%). In the top four,
+  loan vs income appears for 70% of declines, credit score 60%, DTI 51%
+- **Counter-offers:** 81% of all declined applicants (92% of declined 60-month
+  applicants) fall below the cut-off when re-scored at 36 months. This is an
+  upper bound: a shorter term raises the monthly payment, but the model has no
+  payment feature, so it cannot see the extra affordability strain. Part of the
+  36-month advantage may also come from the shorter observation window (see
+  Limitations). A real counter-offer would re-check affordability first
 
 ```bash
 python src/explain/implied_rate_check.py    # interest-rate leak check
