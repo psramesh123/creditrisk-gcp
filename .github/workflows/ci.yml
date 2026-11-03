@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        # Only what the tests need: no BigQuery access is required.
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy pandas scipy "scikit-learn>=1.6" "xgboost>=2.0" joblib ruff
+
+      - name: Lint (syntax errors, undefined names, unused imports)
+        run: ruff check --select E9,F63,F7,F82,F401 .
+
+      - name: Data validation tests
+        run: python tests/test_validate.py
+
+      - name: Implied-rate leak check test
+        run: python tests/test_implied_rate.py
+
+      - name: Reason-code end-to-end test
+        run: python tests/test_reason_codes.py

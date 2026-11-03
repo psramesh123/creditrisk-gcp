@@ -1,5 +1,7 @@
 # Credit Risk Monitoring on GCP (BigQuery + XGBoost + Looker Studio)
 
+[![CI](https://github.com/psramesh123/creditrisk-gcp/actions/workflows/ci.yml/badge.svg)](https://github.com/psramesh123/creditrisk-gcp/actions/workflows/ci.yml)
+
 End-to-end credit risk modeling and monitoring pipeline built on Google Cloud
 Platform, using the Lending Club public dataset.
 
@@ -59,6 +61,11 @@ slice; early stopping at 1,390 of 2,000 trees on validation logloss.
   - Threshold-based alerts written to BigQuery
 - **GCP-native workflow**: BigQuery as the system of record, Looker Studio
   for visualization
+- **Data validation before training**: structural, label, time-split,
+  leakage and range checks stop a run on bad data
+- **Traceable models**: every artifact records the git commit it was trained
+  from, and flags uncommitted changes
+- **Continuous integration**: lint and synthetic tests run on every push
 
 See [`MODEL_CARD.md`](./MODEL_CARD.md) for the full label definition,
 limitations, and methodology notes. See [`ARCHITECTURE.md`](./ARCHITECTURE.md)
@@ -94,15 +101,19 @@ creditrisk-gcp/
 │   ├── ingest/
 │   │   └── upload_and_load.py # CSV → BigQuery
 │   ├── train/
-│   │   ├── train.py           # train + calibrate + write metrics
+│   │   ├── train.py           # validate + train + calibrate + write metrics
+│   │   ├── validate.py        # data checks run before training
 │   │   ├── score_to_bigquery.py
 │   │   ├── evaluate.py
 │   │   └── requirements.txt
 │   └── explain/
 │       ├── reason_codes.py    # SHAP reason codes for declined applicants
 │       └── implied_rate_check.py  # tests whether interest rate is recoverable
-└── tests/
-    └── test_reason_codes.py   # synthetic end-to-end check (no BigQuery)
+├── tests/                     # synthetic tests, no BigQuery needed
+│   ├── test_validate.py
+│   ├── test_implied_rate.py
+│   └── test_reason_codes.py
+└── .github/workflows/ci.yml   # runs lint + tests on every push
 ```
 
 ---
@@ -148,6 +159,12 @@ python src/train/train.py
 ```
 Full run takes ~10–15 minutes on Cloud Shell. For a smoke test, set
 `BQ_LIMIT=20000` to subsample.
+
+Before training, `src/train/validate.py` checks the loaded splits and stops
+the run if any check fails (report saved to
+`$ARTIFACT_DIR/validation_report.json`). Set `SKIP_VALIDATION=1` to bypass
+while debugging. The saved model records the git commit it was trained from;
+its `model_version` ends in `-dirty` if there were uncommitted changes.
 
 ### 6) Score valid + test into BigQuery
 ```bash
@@ -329,6 +346,33 @@ python tests/test_reason_codes.py           # synthetic end-to-end check, no Big
 
 ---
 
+## Data validation and testing
+
+**Before every training run**, `validate.py` checks the train / valid / test
+splits. Failures stop training; warnings are printed and saved.
+
+| Check | Fails when |
+|---|---|
+| Structure | A split is empty, train has too few rows, or a column is missing |
+| Labels | Labels missing or not 0/1, or default rate outside 5–60% |
+| Out-of-time split | Any train loan is issued on or after the earliest valid loan (same for valid/test) |
+| Maturity guard | Any loan issued after 2017-12-01 |
+| Leakage across splits | A loan appears twice, or in more than one split |
+| Missing values | A feature is more than 50% missing in train (warns above 5%) |
+| Plausible ranges | More than 1% of a feature is outside its range, e.g. FICO 300–850 (catches unit and parsing errors) |
+| Allowed values | Term is anything other than 36 or 60 months |
+
+**Tests** run on synthetic data, so they need no GCP access, and run in CI on
+every push:
+
+```bash
+python tests/test_validate.py       # clean data passes; each kind of breakage is caught
+python tests/test_implied_rate.py   # annuity solver recovers known interest rates
+python tests/test_reason_codes.py   # reason codes on models built like train.py
+```
+
+---
+
 ## Limitations
 This is a portfolio / demonstration project. It is **not** intended for
 production underwriting decisions. Notably:
@@ -344,7 +388,7 @@ production underwriting decisions. Notably:
 - The 10% decline rule is a stand-in; a real cut-off would come from expected
   loss vs interest income or the lender's risk appetite
 - No challenger model or A/B framework
-- Manual model versioning (timestamps, no git SHA linkage or model registry)
+- Model versions record the git commit, but there is no model registry
 - Training runs on Cloud Shell; production should use Vertex AI custom jobs
   or appropriately-sized Compute Engine VMs
 
