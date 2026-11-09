@@ -84,18 +84,20 @@ CLUSTER BY model_version, split;
 -- ----------------------------------------------------------------------------
 -- Threshold-based alerts written by the alert SQL files in sql/monitoring/.
 -- Each row is one alert event: an observation that crossed a threshold.
+-- The alert files INSERT without a column list, so the column order here
+-- must match the SELECT order in sql/monitoring/*.sql.
 -- ----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `project-01523b1d-fc19-4c00-97e.creditrisk.monitoring_alerts` (
   ts              TIMESTAMP NOT NULL,
-  alert_type      STRING    NOT NULL,   -- e.g. 'score_p90_drift', 'numeric_mean_drift', 'categorical_share_drift'
-  severity        STRING,                -- 'info' | 'warn' | 'critical'
   model_version   STRING,
   split           STRING,
   issue_month     STRING,
-  feature_name    STRING,                -- NULL for score-level alerts
-  observed_value  FLOAT64,
-  threshold_value FLOAT64,
-  message         STRING                 -- short human-readable description
+  alert_type      STRING    NOT NULL,   -- 'score_drift_p90' | 'numeric_mean_drift' | 'categorical_share_drift'
+  entity          STRING,                -- feature name, or 'p90' for score-level alerts
+  value           FLOAT64,               -- observed month-over-month change
+  threshold       FLOAT64,               -- threshold that was crossed
+  severity        STRING,                -- 'WARN' | 'CRITICAL'
+  details         STRING                 -- short human-readable description
 )
 PARTITION BY DATE(ts)
 CLUSTER BY alert_type, severity;
