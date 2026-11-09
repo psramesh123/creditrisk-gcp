@@ -252,7 +252,7 @@ SELECT
       'Average %s changed %.0f%% from the previous month (limit %.0f%%).',
       LOWER(COALESCE(l.feature_label, a.entity)), a.value * 100, a.threshold * 100)
     WHEN 'categorical_share_drift' THEN FORMAT(
-      'Mix of %s shifted: the most common value''s share moved %.0f points from the previous month (limit %.0f).',
+      'Mix of %s shifted: the most common value\'s share moved %.0f points from the previous month (limit %.0f).',
       LOWER(COALESCE(l.feature_label, a.entity)), a.value * 100, a.threshold * 100)
     ELSE a.details
   END AS message,
