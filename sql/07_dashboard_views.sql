@@ -252,7 +252,7 @@ SELECT
       'Average %s changed %.0f%% from the previous month (limit %.0f%%).',
       LOWER(COALESCE(l.feature_label, a.entity)), a.value * 100, a.threshold * 100)
     WHEN 'categorical_share_drift' THEN FORMAT(
-      'Share of the most common %s value moved %.0f points from the previous month (limit %.0f).',
+      'Mix of %s shifted: the most common value''s share moved %.0f points from the previous month (limit %.0f).',
       LOWER(COALESCE(l.feature_label, a.entity)), a.value * 100, a.threshold * 100)
     ELSE a.details
   END AS message,
@@ -328,11 +328,11 @@ SELECT
   END AS status,
   CASE
     WHEN critical_alerts > 0 THEN FORMAT(
-      '%d critical data change(s) found. Review the alerts before relying on scores for the affected months.',
-      critical_alerts)
+      '%d critical data %s found. Review the alerts before relying on scores for the affected months.',
+      critical_alerts, IF(critical_alerts = 1, 'change', 'changes'))
     WHEN warning_alerts > 0 THEN FORMAT(
-      'The model is ranking risk well, but %d input(s) changed more than usual. Worth watching.',
-      warning_alerts)
+      'The model is ranking risk well, but %d %s changed more than usual. Worth watching.',
+      warning_alerts, IF(warning_alerts = 1, 'input', 'inputs'))
     ELSE 'The model is ranking risk well and no unusual data changes were found.'
   END AS headline,
   FORMAT('The riskiest 5%% of loans default at %.1f× the normal rate.', lift_at_5pct)   AS tile_lift,
