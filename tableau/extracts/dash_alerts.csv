@@ -1,0 +1,2 @@
+checked_at,model_version,split,period,month_start,issue_month,alert_type,severity,severity_rank,what_changed,message,value,threshold,technical_details
+2026-05-04 12:53:36,20260430-002800,valid,Validation period,2016-09-01,2016-09,categorical_share_drift,Critical,1,Listing type (whole/fractional),Mix of listing type (whole/fractional) shifted: the most common value's share moved 12 points from the previous month (limit 8).,0.11763905172289013,0.08,top_share moved from 0.76379023064105933 to 0.6461511789181692; top_cat w -> f

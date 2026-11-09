@@ -1,0 +1,205 @@
+model_version,split,month_start,issue_month,feature_name,feature_label,feature_group,feature_type,loans,null_rate,mean,top_category,top_category_share,change_vs_prev_month,change_vs_first_month,change_measure,status
+20260430-002800,test,2017-03-01,2017-03,annual_income,Annual income,Borrower,numeric,17637,0.0,80525.18563474475,,,,0.0,% change in average,Baseline
+20260430-002800,test,2017-04-01,2017-04,annual_income,Annual income,Borrower,numeric,13645,0.0,79564.95965481897,,,0.011924542270306277,-0.011924542270306277,% change in average,Stable
+20260430-002800,test,2017-05-01,2017-05,annual_income,Annual income,Borrower,numeric,16858,0.0,79219.23696761229,,,0.0043451626030673535,-0.016217890798242,% change in average,Stable
+20260430-002800,test,2017-06-01,2017-06,annual_income,Annual income,Borrower,numeric,16010,0.0,79187.56414303568,,,3.9981229041075587E-4,-0.01661121897658708,% change in average,Stable
+20260430-002800,test,2017-07-01,2017-07,annual_income,Annual income,Borrower,numeric,15763,0.0,76967.84056524742,,,0.028031214267164425,-0.044176800605380005,% change in average,Stable
+20260430-002800,test,2017-08-01,2017-08,annual_income,Annual income,Borrower,numeric,16405,0.0,77558.12377263089,,,0.007669218767844679,-0.03684638338584144,% change in average,Stable
+20260430-002800,test,2017-09-01,2017-09,annual_income,Annual income,Borrower,numeric,14330,0.0,78326.6766831822,,,0.009909379871080936,-0.02730212832460629,% change in average,Stable
+20260430-002800,test,2017-10-01,2017-10,annual_income,Annual income,Borrower,numeric,12783,0.0,77808.287951968,,,0.006618290896101665,-0.03373972579337301,% change in average,Stable
+20260430-002800,test,2017-11-01,2017-11,annual_income,Annual income,Borrower,numeric,12995,0.0,77527.83944055409,,,0.0036043526826735218,-0.03722246860487052,% change in average,Stable
+20260430-002800,test,2017-12-01,2017-12,annual_income,Annual income,Borrower,numeric,10963,0.0,79130.1195174678,,,0.020667157610425712,-0.01732459361975079,% change in average,Stable
+20260430-002800,test,2017-03-01,2017-03,dti,Debt-to-income ratio,Borrower,numeric,17637,0.0,18.13634631740081,,,,0.0,% change in average,Baseline
+20260430-002800,test,2017-04-01,2017-04,dti,Debt-to-income ratio,Borrower,numeric,13645,0.0,18.568048369366128,,,0.023803143390084196,0.023803143390084196,% change in average,Stable
+20260430-002800,test,2017-05-01,2017-05,dti,Debt-to-income ratio,Borrower,numeric,16858,0.0,18.55089571716685,,,9.23772485835269E-4,0.022857382215308777,% change in average,Stable
+20260430-002800,test,2017-06-01,2017-06,dti,Debt-to-income ratio,Borrower,numeric,16010,0.0,18.34801499063095,,,0.010936438306219053,0.01167096555865033,% change in average,Stable
+20260430-002800,test,2017-07-01,2017-07,dti,Debt-to-income ratio,Borrower,numeric,15763,0.0,18.497581044217466,,,0.008151620415771832,0.019917723255541826,% change in average,Stable
+20260430-002800,test,2017-08-01,2017-08,dti,Debt-to-income ratio,Borrower,numeric,16405,0.0,18.374721731179488,,,0.006641912407048753,0.013143519075281926,% change in average,Stable
+20260430-002800,test,2017-09-01,2017-09,dti,Debt-to-income ratio,Borrower,numeric,14330,0.0,19.221254710397787,,,0.04607051968476039,0.05981956751432712,% change in average,Stable
+20260430-002800,test,2017-10-01,2017-10,dti,Debt-to-income ratio,Borrower,numeric,12783,0.0,18.847762653524192,,,0.019431200642253232,0.039226000853370184,% change in average,Stable
+20260430-002800,test,2017-11-01,2017-11,dti,Debt-to-income ratio,Borrower,numeric,12995,0.0,18.478564063101075,,,0.019588457113453937,0.0188691669044677,% change in average,Stable
+20260430-002800,test,2017-12-01,2017-12,dti,Debt-to-income ratio,Borrower,numeric,10963,0.0,18.0629727264435,,,0.022490456251817073,-0.004045665520122541,% change in average,Stable
+20260430-002800,test,2017-03-01,2017-03,grade,Lending Club grade,Loan,categorical,17637,0.0,,A,0.33571469070703636,,0.0,change in share of most common value,Baseline
+20260430-002800,test,2017-04-01,2017-04,grade,Lending Club grade,Loan,categorical,13645,0.0,,A,0.34232319530963723,0.006608504602600873,0.006608504602600873,change in share of most common value,Stable
+20260430-002800,test,2017-05-01,2017-05,grade,Lending Club grade,Loan,categorical,16858,0.0,,A,0.34903310001186383,0.006709904702226599,0.013318409304827472,change in share of most common value,Stable
+20260430-002800,test,2017-06-01,2017-06,grade,Lending Club grade,Loan,categorical,16010,0.0,,A,0.3420986883198001,0.006934411692063713,0.006383997612763759,change in share of most common value,Stable
+20260430-002800,test,2017-07-01,2017-07,grade,Lending Club grade,Loan,categorical,15763,0.0,,A,0.34841083550085644,0.006312147181056327,0.012696144793820086,change in share of most common value,Stable
+20260430-002800,test,2017-08-01,2017-08,grade,Lending Club grade,Loan,categorical,16405,0.0,,A,0.3453215483084425,0.0030892871924139143,0.009606857601406171,change in share of most common value,Stable
+20260430-002800,test,2017-09-01,2017-09,grade,Lending Club grade,Loan,categorical,14330,0.0,,A,0.32609909281228194,0.019222455496160584,-0.009615597894754413,change in share of most common value,Stable
+20260430-002800,test,2017-10-01,2017-10,grade,Lending Club grade,Loan,categorical,12783,0.0,,A,0.28224986309942895,0.04384922971285299,-0.0534648276076074,change in share of most common value,Stable
+20260430-002800,test,2017-11-01,2017-11,grade,Lending Club grade,Loan,categorical,12995,0.0,,A,0.2853405155829165,0.003090652483487555,-0.05037417512411985,change in share of most common value,Stable
+20260430-002800,test,2017-12-01,2017-12,grade,Lending Club grade,Loan,categorical,10963,0.0,,A,0.2814922922557694,0.0038482233271471267,-0.05422239845126697,change in share of most common value,Stable
+20260430-002800,test,2017-03-01,2017-03,home_ownership,Home ownership,Borrower,categorical,17637,0.0,,MORTGAGE,0.50881669218121,,0.0,change in share of most common value,Baseline
+20260430-002800,test,2017-04-01,2017-04,home_ownership,Home ownership,Borrower,categorical,13645,0.0,,MORTGAGE,0.5083913521436424,4.2534003756755645E-4,-4.2534003756755645E-4,change in share of most common value,Stable
+20260430-002800,test,2017-05-01,2017-05,home_ownership,Home ownership,Borrower,categorical,16858,0.0,,MORTGAGE,0.5093724047929766,9.810526493342353E-4,5.557126117666789E-4,change in share of most common value,Stable
+20260430-002800,test,2017-06-01,2017-06,home_ownership,Home ownership,Borrower,categorical,16010,0.0,,MORTGAGE,0.49637726420986883,0.0129951405831078,-0.012439427971341122,change in share of most common value,Stable
+20260430-002800,test,2017-07-01,2017-07,home_ownership,Home ownership,Borrower,categorical,15763,0.0,,MORTGAGE,0.4898813677599442,0.006495896449924654,-0.018935324421265776,change in share of most common value,Stable
+20260430-002800,test,2017-08-01,2017-08,home_ownership,Home ownership,Borrower,categorical,16405,0.0,,MORTGAGE,0.4930813776287717,0.0032000098688275136,-0.015735314552438262,change in share of most common value,Stable
+20260430-002800,test,2017-09-01,2017-09,home_ownership,Home ownership,Borrower,categorical,14330,0.0,,MORTGAGE,0.4901605024424285,0.002920875186343208,-0.01865618973878147,change in share of most common value,Stable
+20260430-002800,test,2017-10-01,2017-10,home_ownership,Home ownership,Borrower,categorical,12783,0.0,,MORTGAGE,0.49143393569584604,0.0012734332534175552,-0.017382756485363915,change in share of most common value,Stable
+20260430-002800,test,2017-11-01,2017-11,home_ownership,Home ownership,Borrower,categorical,12995,0.0,,MORTGAGE,0.49834551750673334,0.006911581810887302,-0.010471174674476613,change in share of most common value,Stable
+20260430-002800,test,2017-12-01,2017-12,home_ownership,Home ownership,Borrower,categorical,10963,0.0,,MORTGAGE,0.47377542643437015,0.024570091072363187,-0.0350412657468398,change in share of most common value,Stable
+20260430-002800,test,2017-03-01,2017-03,initial_list_status,Listing type (whole/fractional),Loan,categorical,17637,0.0,,Whole loan,0.6964903328230425,,0.0,change in share of most common value,Baseline
+20260430-002800,test,2017-04-01,2017-04,initial_list_status,Listing type (whole/fractional),Loan,categorical,13645,0.0,,Whole loan,0.7026749725174056,0.006184639694363114,0.006184639694363114,change in share of most common value,Stable
+20260430-002800,test,2017-05-01,2017-05,initial_list_status,Listing type (whole/fractional),Loan,categorical,16858,0.0,,Whole loan,0.7254122671728556,0.022737294655449936,0.02892193434981305,change in share of most common value,Stable
+20260430-002800,test,2017-06-01,2017-06,initial_list_status,Listing type (whole/fractional),Loan,categorical,16010,0.0,,Whole loan,0.7512804497189257,0.02586818254607015,0.0547901168958832,change in share of most common value,Stable
+20260430-002800,test,2017-07-01,2017-07,initial_list_status,Listing type (whole/fractional),Loan,categorical,15763,0.0,,Whole loan,0.7739643468882826,0.022683897169356926,0.07747401406524013,change in share of most common value,Stable
+20260430-002800,test,2017-08-01,2017-08,initial_list_status,Listing type (whole/fractional),Loan,categorical,16405,0.0,,Whole loan,0.7690338311490399,0.004930515739242747,0.07254349832599738,change in share of most common value,Stable
+20260430-002800,test,2017-09-01,2017-09,initial_list_status,Listing type (whole/fractional),Loan,categorical,14330,0.0,,Whole loan,0.8110956036287509,0.04206177247971099,0.11460527080570837,change in share of most common value,Stable
+20260430-002800,test,2017-10-01,2017-10,initial_list_status,Listing type (whole/fractional),Loan,categorical,12783,0.0,,Whole loan,0.7813502307752483,0.02974537285350254,0.08485989795220583,change in share of most common value,Stable
+20260430-002800,test,2017-11-01,2017-11,initial_list_status,Listing type (whole/fractional),Loan,categorical,12995,0.0,,Fractional,0.8146210080800308,0.03327077730478245,0.11813067525698828,change in share of most common value,Stable
+20260430-002800,test,2017-12-01,2017-12,initial_list_status,Listing type (whole/fractional),Loan,categorical,10963,0.0,,Whole loan,0.8047979567636596,0.009823051316371179,0.1083076239406171,change in share of most common value,Stable
+20260430-002800,test,2017-03-01,2017-03,interest_rate,Interest rate,Loan,numeric,17637,0.0,13.777210976923552,,,,0.0,% change in average,Baseline
+20260430-002800,test,2017-04-01,2017-04,interest_rate,Interest rate,Loan,numeric,13645,0.0,13.910112861854177,,,0.009646501396634786,0.009646501396634786,% change in average,Stable
+20260430-002800,test,2017-05-01,2017-05,interest_rate,Interest rate,Loan,numeric,16858,0.0,13.937938664135654,,,0.0020004008995343045,0.011666199166240279,% change in average,Stable
+20260430-002800,test,2017-06-01,2017-06,interest_rate,Interest rate,Loan,numeric,16010,0.0,14.023038725796326,,,0.0061056418536011145,0.017843070653743236,% change in average,Stable
+20260430-002800,test,2017-07-01,2017-07,interest_rate,Interest rate,Loan,numeric,15763,0.0,14.30874452832583,,,0.020374029346715644,0.03858063524559376,% change in average,Stable
+20260430-002800,test,2017-08-01,2017-08,interest_rate,Interest rate,Loan,numeric,16405,0.0,14.0569948186529,,,0.017594115904058703,0.020307727173371874,% change in average,Stable
+20260430-002800,test,2017-09-01,2017-09,interest_rate,Interest rate,Loan,numeric,14330,0.0,14.70681995812974,,,0.046227884968311754,0.06747439541742212,% change in average,Stable
+20260430-002800,test,2017-10-01,2017-10,interest_rate,Interest rate,Loan,numeric,12783,0.0,14.070982554955723,,,0.04323418692717011,0.021323007865977395,% change in average,Stable
+20260430-002800,test,2017-11-01,2017-11,interest_rate,Interest rate,Loan,numeric,12995,0.0,13.519466717968426,,,0.03919526122879433,-0.018708014226307555,% change in average,Stable
+20260430-002800,test,2017-12-01,2017-12,interest_rate,Interest rate,Loan,numeric,10963,0.0,13.48458998449332,,,0.002579741805107692,-0.021239494185025094,% change in average,Stable
+20260430-002800,test,2017-03-01,2017-03,loan_amount,Loan amount,Loan,numeric,17637,0.0,14513.627601066011,,,,0.0,% change in average,Baseline
+20260430-002800,test,2017-04-01,2017-04,loan_amount,Loan amount,Loan,numeric,13645,0.0,14423.024917552179,,,0.006242593926495542,-0.006242593926495542,% change in average,Stable
+20260430-002800,test,2017-05-01,2017-05,loan_amount,Loan amount,Loan,numeric,16858,0.0,14156.986297306967,,,0.018445410845921422,-0.0245728575626985,% change in average,Stable
+20260430-002800,test,2017-06-01,2017-06,loan_amount,Loan amount,Loan,numeric,16010,0.0,14142.086196127397,,,0.00105249103634467,-0.025599485886721052,% change in average,Stable
+20260430-002800,test,2017-07-01,2017-07,loan_amount,Loan amount,Loan,numeric,15763,0.0,13939.481697646437,,,0.014326351548927758,-0.039559090201363833,% change in average,Stable
+20260430-002800,test,2017-08-01,2017-08,loan_amount,Loan amount,Loan,numeric,16405,0.0,13808.80219445292,,,0.009374774903975243,-0.04856300753929524,% change in average,Stable
+20260430-002800,test,2017-09-01,2017-09,loan_amount,Loan amount,Loan,numeric,14330,0.0,14745.218073970731,,,0.06781296931706182,0.015956760037560122,% change in average,Stable
+20260430-002800,test,2017-10-01,2017-10,loan_amount,Loan amount,Loan,numeric,12783,0.0,14561.548541031023,,,0.012456210007767471,0.0033017892757212517,% change in average,Stable
+20260430-002800,test,2017-11-01,2017-11,loan_amount,Loan amount,Loan,numeric,12995,0.0,14579.305502116165,,,0.0012194418083425296,0.004525257423948933,% change in average,Stable
+20260430-002800,test,2017-12-01,2017-12,loan_amount,Loan amount,Loan,numeric,10963,0.0,15098.638602572242,,,0.035621250983505104,0.04030770373791749,% change in average,Stable
+20260430-002800,test,2017-03-01,2017-03,purpose,Loan purpose,Loan,categorical,17637,0.0,,home_improvement,0.5682372285536089,,0.0,change in share of most common value,Baseline
+20260430-002800,test,2017-04-01,2017-04,purpose,Loan purpose,Loan,categorical,13645,0.0,,home_improvement,0.5585196042506413,0.009717624302967631,-0.009717624302967631,change in share of most common value,Stable
+20260430-002800,test,2017-05-01,2017-05,purpose,Loan purpose,Loan,categorical,16858,0.0,,car,0.560861312136671,0.0023417078860297202,-0.007375916416937911,change in share of most common value,Stable
+20260430-002800,test,2017-06-01,2017-06,purpose,Loan purpose,Loan,categorical,16010,0.0,,car,0.5751405371642724,0.014279225027601372,0.006903308610663461,change in share of most common value,Stable
+20260430-002800,test,2017-07-01,2017-07,purpose,Loan purpose,Loan,categorical,15763,0.0,,major_purchase,0.568165958256677,0.006974578907595341,-7.127029693188014E-5,change in share of most common value,Stable
+20260430-002800,test,2017-08-01,2017-08,purpose,Loan purpose,Loan,categorical,16405,0.0,,credit_card,0.5632429137458093,0.00492304451086778,-0.00499431480779966,change in share of most common value,Stable
+20260430-002800,test,2017-09-01,2017-09,purpose,Loan purpose,Loan,categorical,14330,0.0,,debt_consolidation,0.5706908583391487,0.007447944593339417,0.002453629785539757,change in share of most common value,Stable
+20260430-002800,test,2017-10-01,2017-10,purpose,Loan purpose,Loan,categorical,12783,0.0,,other,0.5526089337401237,0.018081924599025023,-0.015628294813485266,change in share of most common value,Stable
+20260430-002800,test,2017-11-01,2017-11,purpose,Loan purpose,Loan,categorical,12995,0.0,,home_improvement,0.5302808772604848,0.02232805647963887,-0.037956351293124135,change in share of most common value,Stable
+20260430-002800,test,2017-12-01,2017-12,purpose,Loan purpose,Loan,categorical,10963,0.0,,other,0.5199306759098787,0.010350201350606048,-0.04830655264373018,change in share of most common value,Stable
+20260430-002800,test,2017-03-01,2017-03,revol_bal,Credit card balance,Credit history,numeric,17637,0.0,16152.206384305753,,,,0.0,% change in average,Baseline
+20260430-002800,test,2017-04-01,2017-04,revol_bal,Credit card balance,Credit history,numeric,13645,0.0,15908.582557713415,,,0.015083006048576427,-0.015083006048576427,% change in average,Stable
+20260430-002800,test,2017-05-01,2017-05,revol_bal,Credit card balance,Credit history,numeric,16858,0.0,15726.011685846473,,,0.01147625008102435,-0.026386159780213712,% change in average,Stable
+20260430-002800,test,2017-06-01,2017-06,revol_bal,Credit card balance,Credit history,numeric,16010,0.0,15311.030106183644,,,0.026388227857945472,-0.05207810364158275,% change in average,Stable
+20260430-002800,test,2017-07-01,2017-07,revol_bal,Credit card balance,Credit history,numeric,15763,0.0,14740.997145213516,,,0.037230216191653176,-0.08736944077580848,% change in average,Stable
+20260430-002800,test,2017-08-01,2017-08,revol_bal,Credit card balance,Credit history,numeric,16405,0.0,14779.780006095689,,,0.002630952336542975,-0.08496835327361707,% change in average,Stable
+20260430-002800,test,2017-09-01,2017-09,revol_bal,Credit card balance,Credit history,numeric,14330,0.0,14588.388555478046,,,0.012949546646750227,-0.09681759826615303,% change in average,Stable
+20260430-002800,test,2017-10-01,2017-10,revol_bal,Credit card balance,Credit history,numeric,12783,0.0,14490.283814441043,,,0.006724851114564251,-0.10289136544710772,% change in average,Stable
+20260430-002800,test,2017-11-01,2017-11,revol_bal,Credit card balance,Credit history,numeric,12995,0.0,14556.21639091955,,,0.004550123194467572,-0.09880941064107147,% change in average,Stable
+20260430-002800,test,2017-12-01,2017-12,revol_bal,Credit card balance,Credit history,numeric,10963,0.0,14370.233147860992,,,0.01277689463139456,-0.11032382784411486,% change in average,Stable
+20260430-002800,test,2017-03-01,2017-03,revol_util,Credit card utilisation,Credit history,numeric,17630,0.0,47.88348269994311,,,,0.0,% change in average,Baseline
+20260430-002800,test,2017-04-01,2017-04,revol_util,Credit card utilisation,Credit history,numeric,13636,0.0,47.38248753300107,,,0.01046279716288547,-0.01046279716288547,% change in average,Stable
+20260430-002800,test,2017-05-01,2017-05,revol_util,Credit card utilisation,Credit history,numeric,16845,0.0,47.37925200356185,,,6.828534354517866E-5,-0.010530368050731938,% change in average,Stable
+20260430-002800,test,2017-06-01,2017-06,revol_util,Credit card utilisation,Credit history,numeric,15998,0.0,46.241523940492726,,,0.024013212850713526,-0.034290712932046885,% change in average,Stable
+20260430-002800,test,2017-07-01,2017-07,revol_util,Credit card utilisation,Credit history,numeric,15754,0.0,46.81947441919504,,,0.012498517121668946,-0.02222077887307336,% change in average,Stable
+20260430-002800,test,2017-08-01,2017-08,revol_util,Credit card utilisation,Credit history,numeric,16393,0.0,46.247611785518096,,,0.012214204468781714,-0.03416357420524377,% change in average,Stable
+20260430-002800,test,2017-09-01,2017-09,revol_util,Credit card utilisation,Credit history,numeric,14312,0.0,44.760061486864224,,,0.03216491060236069,-0.06522961649743568,% change in average,Stable
+20260430-002800,test,2017-10-01,2017-10,revol_util,Credit card utilisation,Credit history,numeric,12762,0.0,42.587925090111554,,,0.04852844979648048,-0.11059257412447668,% change in average,Stable
+20260430-002800,test,2017-11-01,2017-11,revol_util,Credit card utilisation,Credit history,numeric,12974,0.0,42.0129875134883,,,0.013500013804540814,-0.12259958665165735,% change in average,Stable
+20260430-002800,test,2017-12-01,2017-12,revol_util,Credit card utilisation,Credit history,numeric,10939,0.0,41.31920650882178,,,0.01651348894062295,-0.13708852867398322,% change in average,Stable
+20260430-002800,test,2017-03-01,2017-03,total_acc,Number of credit accounts,Credit history,numeric,17637,0.0,24.552361512728893,,,,0.0,% change in average,Baseline
+20260430-002800,test,2017-04-01,2017-04,total_acc,Number of credit accounts,Credit history,numeric,13645,0.0,24.49329424697691,,,0.0024057671894966953,-0.0024057671894966953,% change in average,Stable
+20260430-002800,test,2017-05-01,2017-05,total_acc,Number of credit accounts,Credit history,numeric,16858,0.0,24.555819195633962,,,0.002552737415661036,1.408289342463429E-4,% change in average,Stable
+20260430-002800,test,2017-06-01,2017-06,total_acc,Number of credit accounts,Credit history,numeric,16010,0.0,24.271330418488347,,,0.011585391425108607,-0.011446194049189489,% change in average,Stable
+20260430-002800,test,2017-07-01,2017-07,total_acc,Number of credit accounts,Credit history,numeric,15763,0.0,24.044661549197546,,,0.009338955276969051,-0.02067825383184165,% change in average,Stable
+20260430-002800,test,2017-08-01,2017-08,total_acc,Number of credit accounts,Credit history,numeric,16405,0.0,23.97110637000916,,,0.003059106448135491,-0.023674103300343974,% change in average,Stable
+20260430-002800,test,2017-09-01,2017-09,total_acc,Number of credit accounts,Credit history,numeric,14330,0.0,23.910886252616955,,,0.002512195993904909,-0.026126825306778467,% change in average,Stable
+20260430-002800,test,2017-10-01,2017-10,total_acc,Number of credit accounts,Credit history,numeric,12783,0.0,23.632245951654646,,,0.01165328202470172,-0.03747564406777018,% change in average,Stable
+20260430-002800,test,2017-11-01,2017-11,total_acc,Number of credit accounts,Credit history,numeric,12995,0.0,23.30019238168534,,,0.014050868065972302,-0.05099994680325891,% change in average,Stable
+20260430-002800,test,2017-12-01,2017-12,total_acc,Number of credit accounts,Credit history,numeric,10963,0.0,23.2178235884338,,,0.0035351121528199984,-0.05435476842434153,% change in average,Stable
+20260430-002800,test,2017-03-01,2017-03,verification_status,Income verification,Borrower,categorical,17637,0.0,,Not Verified,0.4135056982480014,,0.0,change in share of most common value,Baseline
+20260430-002800,test,2017-04-01,2017-04,verification_status,Income verification,Borrower,categorical,13645,0.0,,Not Verified,0.3933308904360572,0.020174807811944195,-0.020174807811944195,change in share of most common value,Stable
+20260430-002800,test,2017-05-01,2017-05,verification_status,Income verification,Borrower,categorical,16858,0.0,,Source Verified,0.414461976509669,0.021131086073611804,9.562782616676091E-4,change in share of most common value,Stable
+20260430-002800,test,2017-06-01,2017-06,verification_status,Income verification,Borrower,categorical,16010,0.0,,Verified,0.40168644597126796,0.012775530538401025,-0.011819252276733416,change in share of most common value,Stable
+20260430-002800,test,2017-07-01,2017-07,verification_status,Income verification,Borrower,categorical,15763,0.0,,Source Verified,0.3938336611051196,0.007852784866148377,-0.019672037142881793,change in share of most common value,Stable
+20260430-002800,test,2017-08-01,2017-08,verification_status,Income verification,Borrower,categorical,16405,0.0,,Not Verified,0.40713197195976836,0.013298310854648776,-0.006373726288233017,change in share of most common value,Stable
+20260430-002800,test,2017-09-01,2017-09,verification_status,Income verification,Borrower,categorical,14330,0.0,,Verified,0.38318213538032103,0.023949836579447326,-0.030323562867680343,change in share of most common value,Stable
+20260430-002800,test,2017-10-01,2017-10,verification_status,Income verification,Borrower,categorical,12783,0.0,,Source Verified,0.376906829382774,0.006275305997547054,-0.036598868865227396,change in share of most common value,Stable
+20260430-002800,test,2017-11-01,2017-11,verification_status,Income verification,Borrower,categorical,12995,0.0,,Not Verified,0.39107348980377066,0.01416666042099668,-0.022432208444230717,change in share of most common value,Stable
+20260430-002800,test,2017-12-01,2017-12,verification_status,Income verification,Borrower,categorical,10963,0.0,,Not Verified,0.38420140472498404,0.006872085078786616,-0.029304293523017333,change in share of most common value,Stable
+20260430-002800,valid,2016-08-01,2016-08,annual_income,Annual income,Borrower,numeric,22806,0.0,79198.87520784051,,,,0.0,% change in average,Baseline
+20260430-002800,valid,2016-09-01,2016-09,annual_income,Annual income,Borrower,numeric,17304,0.0,78961.70636962514,,,0.0029945985671256978,-0.0029945985671256978,% change in average,Stable
+20260430-002800,valid,2016-10-01,2016-10,annual_income,Annual income,Borrower,numeric,19439,0.0,80270.13275374264,,,0.016570391450162748,0.013526171212543682,% change in average,Stable
+20260430-002800,valid,2016-11-01,2016-11,annual_income,Annual income,Borrower,numeric,19525,0.0,80074.76344481463,,,0.00243389791726617,0.011059351975334716,% change in average,Stable
+20260430-002800,valid,2016-12-01,2016-12,annual_income,Annual income,Borrower,numeric,20031,0.0,78624.42777395016,,,0.01811226919032991,-0.00725322717504306,% change in average,Stable
+20260430-002800,valid,2017-01-01,2017-01,annual_income,Annual income,Borrower,numeric,16941,0.0,81393.61461306908,,,0.0352204387048831,0.027711749686708847,% change in average,Stable
+20260430-002800,valid,2017-02-01,2017-02,annual_income,Annual income,Borrower,numeric,13984,0.0,80673.02164545232,,,0.008853187944070676,0.018613224414402694,% change in average,Stable
+20260430-002800,valid,2016-08-01,2016-08,dti,Debt-to-income ratio,Borrower,numeric,22806,0.0,17.866874068227613,,,,0.0,% change in average,Baseline
+20260430-002800,valid,2016-09-01,2016-09,dti,Debt-to-income ratio,Borrower,numeric,17304,0.0,17.769165510864553,,,0.005468699056698073,-0.005468699056698073,% change in average,Stable
+20260430-002800,valid,2016-10-01,2016-10,dti,Debt-to-income ratio,Borrower,numeric,19439,0.0,18.43995112917325,,,0.037749978630035194,0.032074836300812676,% change in average,Stable
+20260430-002800,valid,2016-11-01,2016-11,dti,Debt-to-income ratio,Borrower,numeric,19525,0.0,18.496306786171647,,,0.0030561717112818306,0.03522903421944105,% change in average,Stable
+20260430-002800,valid,2016-12-01,2016-12,dti,Debt-to-income ratio,Borrower,numeric,20031,0.0,18.616994658279687,,,0.006524971363378819,0.04198387402226121,% change in average,Stable
+20260430-002800,valid,2017-01-01,2017-01,dti,Debt-to-income ratio,Borrower,numeric,16941,0.0,18.296586978336652,,,0.01721049427279806,0.024050816526053148,% change in average,Stable
+20260430-002800,valid,2017-02-01,2017-02,dti,Debt-to-income ratio,Borrower,numeric,13984,0.0,18.334833381006867,,,0.0020903572188353294,0.026191448542832597,% change in average,Stable
+20260430-002800,valid,2016-08-01,2016-08,grade,Lending Club grade,Loan,categorical,22806,0.0,,A,0.34341839866701745,,0.0,change in share of most common value,Baseline
+20260430-002800,valid,2016-09-01,2016-09,grade,Lending Club grade,Loan,categorical,17304,0.0,,A,0.34471798428109107,0.0012995856140736173,0.0012995856140736173,change in share of most common value,Stable
+20260430-002800,valid,2016-10-01,2016-10,grade,Lending Club grade,Loan,categorical,19439,0.0,,A,0.33427645455013116,0.010441529730959909,-0.009141944116886291,change in share of most common value,Stable
+20260430-002800,valid,2016-11-01,2016-11,grade,Lending Club grade,Loan,categorical,19525,0.0,,A,0.343303457106274,0.00902700255614286,-1.149415607434312E-4,change in share of most common value,Stable
+20260430-002800,valid,2016-12-01,2016-12,grade,Lending Club grade,Loan,categorical,20031,0.0,,A,0.33343317857321153,0.009870278533062493,-0.009985220093805924,change in share of most common value,Stable
+20260430-002800,valid,2017-01-01,2017-01,grade,Lending Club grade,Loan,categorical,16941,0.0,,A,0.3359305826102355,0.002497404037023976,-0.0074878160567819485,change in share of most common value,Stable
+20260430-002800,valid,2017-02-01,2017-02,grade,Lending Club grade,Loan,categorical,13984,0.0,,A,0.3500429061784897,0.014112323568254204,0.006624507511472255,change in share of most common value,Stable
+20260430-002800,valid,2016-08-01,2016-08,home_ownership,Home ownership,Borrower,categorical,22806,0.0,,OWN,0.4707094624221696,,0.0,change in share of most common value,Baseline
+20260430-002800,valid,2016-09-01,2016-09,home_ownership,Home ownership,Borrower,categorical,17304,0.0,,MORTGAGE,0.4776352288488211,0.006925766426651492,0.006925766426651492,change in share of most common value,Stable
+20260430-002800,valid,2016-10-01,2016-10,home_ownership,Home ownership,Borrower,categorical,19439,0.0,,MORTGAGE,0.5033695148927414,0.025734286043920307,0.0326600524705718,change in share of most common value,Stable
+20260430-002800,valid,2016-11-01,2016-11,home_ownership,Home ownership,Borrower,categorical,19525,0.0,,MORTGAGE,0.5067349551856594,0.003365440292917965,0.036025492763489764,change in share of most common value,Stable
+20260430-002800,valid,2016-12-01,2016-12,home_ownership,Home ownership,Borrower,categorical,20031,0.0,,MORTGAGE,0.47790924067695073,0.028825714508708633,0.007199778254781131,change in share of most common value,Stable
+20260430-002800,valid,2017-01-01,2017-01,home_ownership,Home ownership,Borrower,categorical,16941,0.0,,MORTGAGE,0.4954843279617496,0.017575087284798896,0.024774865539580027,change in share of most common value,Stable
+20260430-002800,valid,2017-02-01,2017-02,home_ownership,Home ownership,Borrower,categorical,13984,0.0,,MORTGAGE,0.4994279176201373,0.003943589658387647,0.028718455197967674,change in share of most common value,Stable
+20260430-002800,valid,2016-08-01,2016-08,initial_list_status,Listing type (whole/fractional),Loan,categorical,22806,0.0,,Whole loan,0.7637902306410593,,0.0,change in share of most common value,Baseline
+20260430-002800,valid,2016-09-01,2016-09,initial_list_status,Listing type (whole/fractional),Loan,categorical,17304,0.0,,Fractional,0.6461511789181692,0.11763905172289013,-0.11763905172289013,change in share of most common value,Critical
+20260430-002800,valid,2016-10-01,2016-10,initial_list_status,Listing type (whole/fractional),Loan,categorical,19439,0.0,,Whole loan,0.6915479191316426,0.0453967402134734,-0.07224231150941673,change in share of most common value,Stable
+20260430-002800,valid,2016-11-01,2016-11,initial_list_status,Listing type (whole/fractional),Loan,categorical,19525,0.0,,Whole loan,0.7124711907810499,0.020923271649407327,-0.05131903986000941,change in share of most common value,Stable
+20260430-002800,valid,2016-12-01,2016-12,initial_list_status,Listing type (whole/fractional),Loan,categorical,20031,0.0,,Whole loan,0.7103988817333133,0.002072309047736587,-0.053391348907745995,change in share of most common value,Stable
+20260430-002800,valid,2017-01-01,2017-01,initial_list_status,Listing type (whole/fractional),Loan,categorical,16941,0.0,,Whole loan,0.6926981878283455,0.017700693904967868,-0.07109204281271386,change in share of most common value,Stable
+20260430-002800,valid,2017-02-01,2017-02,initial_list_status,Listing type (whole/fractional),Loan,categorical,13984,0.0,,Whole loan,0.6656178489702517,0.0270803388580938,-0.09817238167080766,change in share of most common value,Stable
+20260430-002800,valid,2016-08-01,2016-08,interest_rate,Interest rate,Loan,numeric,22806,0.0,13.949636937647933,,,,0.0,% change in average,Baseline
+20260430-002800,valid,2016-09-01,2016-09,interest_rate,Interest rate,Loan,numeric,17304,0.0,14.248010864540024,,,0.02138936864276562,0.02138936864276562,% change in average,Stable
+20260430-002800,valid,2016-10-01,2016-10,interest_rate,Interest rate,Loan,numeric,19439,0.0,13.923595863984833,,,0.022769143260732965,-0.0018667922168511036,% change in average,Stable
+20260430-002800,valid,2016-11-01,2016-11,interest_rate,Interest rate,Loan,numeric,19525,0.0,13.946561331626087,,,0.001649392000859337,-2.2047928814150714E-4,% change in average,Stable
+20260430-002800,valid,2016-12-01,2016-12,interest_rate,Interest rate,Loan,numeric,20031,0.0,14.317445459537678,,,0.026593231054779863,0.026366888509986017,% change in average,Stable
+20260430-002800,valid,2017-01-01,2017-01,interest_rate,Interest rate,Loan,numeric,16941,0.0,14.103657989492955,,,0.014931956308051232,0.011041222974724416,% change in average,Stable
+20260430-002800,valid,2017-02-01,2017-02,interest_rate,Interest rate,Loan,numeric,13984,0.0,13.924518735697891,,,0.012701616412459852,-0.0018006348166848252,% change in average,Stable
+20260430-002800,valid,2016-08-01,2016-08,loan_amount,Loan amount,Loan,numeric,22806,0.0,14210.73292116116,,,,0.0,% change in average,Baseline
+20260430-002800,valid,2016-09-01,2016-09,loan_amount,Loan amount,Loan,numeric,17304,0.0,14069.15742024966,,,0.009962575589657336,-0.009962575589657336,% change in average,Stable
+20260430-002800,valid,2016-10-01,2016-10,loan_amount,Loan amount,Loan,numeric,19439,0.0,13988.876742630806,,,0.005706146801890642,-0.01561187447270846,% change in average,Stable
+20260430-002800,valid,2016-11-01,2016-11,loan_amount,Loan amount,Loan,numeric,19525,0.0,14064.966709346943,,,0.005439319261728494,-0.010257473180511057,% change in average,Stable
+20260430-002800,valid,2016-12-01,2016-12,loan_amount,Loan amount,Loan,numeric,20031,0.0,13965.841695372226,,,0.007047653650601471,-0.01723283571280595,% change in average,Stable
+20260430-002800,valid,2017-01-01,2017-01,loan_amount,Loan amount,Loan,numeric,16941,0.0,14519.99734372234,,,0.03967935914193705,0.02176273555184867,% change in average,Stable
+20260430-002800,valid,2017-02-01,2017-02,loan_amount,Loan amount,Loan,numeric,13984,0.0,14722.177131006916,,,0.013924230321707873,0.0359899952158109,% change in average,Stable
+20260430-002800,valid,2016-08-01,2016-08,purpose,Loan purpose,Loan,categorical,22806,0.0,,major_purchase,0.5939226519337016,,0.0,change in share of most common value,Baseline
+20260430-002800,valid,2016-09-01,2016-09,purpose,Loan purpose,Loan,categorical,17304,0.0,,major_purchase,0.5853559870550162,0.008566664878685404,-0.008566664878685404,change in share of most common value,Stable
+20260430-002800,valid,2016-10-01,2016-10,purpose,Loan purpose,Loan,categorical,19439,0.0,,credit_card,0.5896908277174752,0.0043348406624589275,-0.004231824216226476,change in share of most common value,Stable
+20260430-002800,valid,2016-11-01,2016-11,purpose,Loan purpose,Loan,categorical,19525,0.0,,major_purchase,0.5952368758002561,0.005546048082780919,0.0013142238665544426,change in share of most common value,Stable
+20260430-002800,valid,2016-12-01,2016-12,purpose,Loan purpose,Loan,categorical,20031,0.0,,credit_card,0.5851929509260646,0.010043924874191479,-0.008729701007637036,change in share of most common value,Stable
+20260430-002800,valid,2017-01-01,2017-01,purpose,Loan purpose,Loan,categorical,16941,0.0,,debt_consolidation,0.5868012514019243,0.001608300475859692,-0.007121400531777344,change in share of most common value,Stable
+20260430-002800,valid,2017-02-01,2017-02,purpose,Loan purpose,Loan,categorical,13984,0.0,,home_improvement,0.5749427917620137,0.011858459639910612,-0.018979860171687957,change in share of most common value,Stable
+20260430-002800,valid,2016-08-01,2016-08,revol_bal,Credit card balance,Credit history,numeric,22806,0.0,15031.597737437494,,,,0.0,% change in average,Baseline
+20260430-002800,valid,2016-09-01,2016-09,revol_bal,Credit card balance,Credit history,numeric,17304,0.0,14789.285136384682,,,0.016120215913529384,-0.016120215913529384,% change in average,Stable
+20260430-002800,valid,2016-10-01,2016-10,revol_bal,Credit card balance,Credit history,numeric,19439,0.0,15418.999074026467,,,0.04257906530536487,0.025772465665716737,% change in average,Stable
+20260430-002800,valid,2016-11-01,2016-11,revol_bal,Credit card balance,Credit history,numeric,19525,0.0,15777.505352112687,,,0.023250943616056646,0.049622643427813716,% change in average,Stable
+20260430-002800,valid,2016-12-01,2016-12,revol_bal,Credit card balance,Credit history,numeric,20031,0.0,15203.906544855483,,,0.03635548170993939,0.011463106612335605,% change in average,Stable
+20260430-002800,valid,2017-01-01,2017-01,revol_bal,Credit card balance,Credit history,numeric,16941,0.0,16384.29130511779,,,0.0776369386893996,0.08999000580698716,% change in average,Stable
+20260430-002800,valid,2017-02-01,2017-02,revol_bal,Credit card balance,Credit history,numeric,13984,0.0,16454.576945080098,,,0.0042898187448824465,0.09466586536563248,% change in average,Stable
+20260430-002800,valid,2016-08-01,2016-08,revol_util,Credit card utilisation,Credit history,numeric,22797,0.0,49.55118655963533,,,,0.0,% change in average,Baseline
+20260430-002800,valid,2016-09-01,2016-09,revol_util,Credit card utilisation,Credit history,numeric,17289,0.0,47.66721036497186,,,0.03802080889417434,-0.03802080889417434,% change in average,Stable
+20260430-002800,valid,2016-10-01,2016-10,revol_util,Credit card utilisation,Credit history,numeric,19417,0.0,47.59661121697469,,,0.001481084113305779,-0.03944558099145192,% change in average,Stable
+20260430-002800,valid,2016-11-01,2016-11,revol_util,Credit card utilisation,Credit history,numeric,19511,0.0,49.84208907795636,,,0.04717726332963902,0.005870747776562769,% change in average,Stable
+20260430-002800,valid,2016-12-01,2016-12,revol_util,Credit card utilisation,Credit history,numeric,20015,0.0,48.70026480139913,,,0.022908836641484683,-0.01717258086669855,% change in average,Stable
+20260430-002800,valid,2017-01-01,2017-01,revol_util,Credit card utilisation,Credit history,numeric,16935,0.0,48.57155594921766,,,0.0026428778715340863,-0.019770073704262908,% change in average,Stable
+20260430-002800,valid,2017-02-01,2017-02,revol_util,Credit card utilisation,Credit history,numeric,13976,0.0,48.68797223812237,,,0.0023967996624696193,-0.017420658947774666,% change in average,Stable
+20260430-002800,valid,2016-08-01,2016-08,total_acc,Number of credit accounts,Credit history,numeric,22806,0.0,24.46356222046848,,,,0.0,% change in average,Baseline
+20260430-002800,valid,2016-09-01,2016-09,total_acc,Number of credit accounts,Credit history,numeric,17304,0.0,25.008668515950035,,,0.022282376154747808,0.022282376154747808,% change in average,Stable
+20260430-002800,valid,2016-10-01,2016-10,total_acc,Number of credit accounts,Credit history,numeric,19439,0.0,25.00509285457067,,,1.4297687928026525E-4,0.02213621341086199,% change in average,Stable
+20260430-002800,valid,2016-11-01,2016-11,total_acc,Number of credit accounts,Credit history,numeric,19525,0.0,24.36384122919323,,,0.02564484079731082,-0.004076307055225683,% change in average,Stable
+20260430-002800,valid,2016-12-01,2016-12,total_acc,Number of credit accounts,Credit history,numeric,20031,0.0,24.279466826419036,,,0.003463099352046991,-0.007525289750950977,% change in average,Stable
+20260430-002800,valid,2017-01-01,2017-01,total_acc,Number of credit accounts,Credit history,numeric,16941,0.0,24.642819196033187,,,0.014965417989277249,0.007327509131712866,% change in average,Stable
+20260430-002800,valid,2017-02-01,2017-02,total_acc,Number of credit accounts,Credit history,numeric,13984,0.0,24.66533180778028,,,9.135566660618423E-4,0.008247759892587614,% change in average,Stable
+20260430-002800,valid,2016-08-01,2016-08,verification_status,Income verification,Borrower,categorical,22806,0.0,,Verified,0.4229588704726826,,0.0,change in share of most common value,Baseline
+20260430-002800,valid,2016-09-01,2016-09,verification_status,Income verification,Borrower,categorical,17304,0.0,,Verified,0.4413430420711974,0.018384171598514798,0.018384171598514798,change in share of most common value,Stable
+20260430-002800,valid,2016-10-01,2016-10,verification_status,Income verification,Borrower,categorical,19439,0.0,,Source Verified,0.4115952466690673,0.029747795402130073,-0.011363623803615275,change in share of most common value,Stable
+20260430-002800,valid,2016-11-01,2016-11,verification_status,Income verification,Borrower,categorical,19525,0.0,,Not Verified,0.4094238156209987,0.002171431048068606,-0.013535054851683881,change in share of most common value,Stable
+20260430-002800,valid,2016-12-01,2016-12,verification_status,Income verification,Borrower,categorical,20031,0.0,,Not Verified,0.4200489241675403,0.010625108546541584,-0.002909946305142297,change in share of most common value,Stable
+20260430-002800,valid,2017-01-01,2017-01,verification_status,Income verification,Borrower,categorical,16941,0.0,,Source Verified,0.4155008559116935,0.004548068255846804,-0.007458014560989101,change in share of most common value,Stable
+20260430-002800,valid,2017-02-01,2017-02,verification_status,Income verification,Borrower,categorical,13984,0.0,,Source Verified,0.4113987414187643,0.0041021144929291875,-0.011560129053918289,change in share of most common value,Stable
