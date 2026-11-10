@@ -38,3 +38,6 @@ key.json
 .cloudshell/
 runs/
 artifacts/
+
+# Tableau autosave/recovery files
+*.twbr

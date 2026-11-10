@@ -55,6 +55,12 @@ bq query --use_legacy_sql=false < sql/monitoring/11_alert_numeric_mean.sql
  
 log "[3/3] Running alert: categorical top-share drift"
 bq query --use_legacy_sql=false < sql/monitoring/12_alert_categorical_share.sql
- 
+
+# ============================================================================
+# 4) Export dashboard data for Tableau
+# ============================================================================
+log "[4/4] Exporting dashboard views to tableau/extracts/"
+./tableau/export_data.sh
+
 log "Monitoring refresh complete."
  
