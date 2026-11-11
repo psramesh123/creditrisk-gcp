@@ -187,7 +187,7 @@ here for transparency.
 These metrics are surfaced in:
 - `creditrisk.model_metrics` (raw evaluation)
 - `creditrisk.monitoring_rollups` and its `_latest` view
-- Looker Studio dashboard (Executive Summary + Lift/Recall page)
+- Tableau dashboard (page 1 headline numbers and page 4 scorecard)
 
 ---
 

@@ -1,4 +1,4 @@
-# Credit Risk Monitoring on GCP (BigQuery + XGBoost + Looker Studio)
+# Credit Risk Monitoring on GCP (BigQuery + XGBoost + Tableau)
 
 [![CI](https://github.com/psramesh123/creditrisk-gcp/actions/workflows/ci.yml/badge.svg)](https://github.com/psramesh123/creditrisk-gcp/actions/workflows/ci.yml)
 
@@ -8,8 +8,10 @@ Platform, using the Lending Club public dataset.
 The project demonstrates a complete MLOps loop:
 
 ingest → feature engineering (BigQuery SQL) → calibrated XGBoost model →
-batch scoring → drift monitoring → threshold-based alerting → Looker Studio
+batch scoring → drift monitoring → threshold-based alerting → Tableau
 dashboard.
+
+**[View the live dashboard on Tableau Public](https://public.tableau.com/app/profile/pranav.sai.ramesh/viz/credit_risk_monitoring/1-Isthemodelworking)**
 
 The architecture is **BigQuery-first**: every artifact (features, predictions,
 metrics, drift, alerts) lives in BigQuery, giving the system an auditable,
@@ -59,8 +61,8 @@ slice; early stopping at 1,390 of 2,000 trees on validation logloss.
   - Score drift (p50 / p90 / p99 / avg by month)
   - Feature drift (numeric stats + categorical share / entropy)
   - Threshold-based alerts written to BigQuery
-- **GCP-native workflow**: BigQuery as the system of record, Looker Studio
-  for visualization
+- **GCP-native workflow**: BigQuery as the system of record, Tableau for
+  visualization
 - **Data validation before training**: structural, label, time-split,
   leakage and range checks stop a run on bad data
 - **Traceable models**: every artifact records the git commit it was trained
@@ -200,25 +202,51 @@ chmod +x run_monitoring.sh
 
 ---
 
-## Looker Studio dashboard
+## Tableau dashboard
 
-Five-page Looker Studio dashboard surfacing model performance and monitoring,
-backed by BigQuery `_latest` views.
+**Live version: [Credit Risk Model Monitor on Tableau Public](https://public.tableau.com/app/profile/pranav.sai.ramesh/viz/credit_risk_monitoring/1-Isthemodelworking)**
 
-### Executive Summary
-![Executive Summary](docs/screenshots/01_executive_summary.png)
+A four-page Tableau workbook,
+[`tableau/credit_risk_monitoring.twbx`](tableau/credit_risk_monitoring.twbx),
+written for business readers: each page answers one question in plain
+language, and the technical detail is kept to the last page.
 
-### Lift / Recall Performance
-![Lift / Recall Performance](docs/screenshots/02_lift_recall_performance.png)
+The workbook reads small aggregate CSVs in `tableau/extracts/` (no
+loan-level rows), so it opens without a BigQuery connection. They come from
+the `dash_*` views in `sql/07_dashboard_views.sql`;
+`tableau/export_data.sh` re-exports them, and `run_monitoring.sh` calls it
+as its last step.
 
-### Score Drift
-![Score Drift](docs/screenshots/03_score_drift.png)
+### 1. Is the model working?
+A one-line health status with a plain-English reason, four headline numbers
+(lift in the riskiest 5%, defaults found in the riskiest 10%, predicted vs
+actual default rate, open alerts) and predicted vs actual default rate by
+month for the monitored period.
 
-### Feature Drift
-![Feature Drift](docs/screenshots/04_feature_drift.png)
+![Is the model working?](docs/screenshots/tableau_1_is_the_model_working.png)
 
-### Alerts
-![Alerts](docs/screenshots/05_alerts.png)
+### 2. What if we changed the cut-off?
+A slider declines the riskiest 0-30% of applicants, with an optional loan
+term filter. The page shows defaults avoided, good borrowers turned away, the
+approval rate and the default rate of the loans still approved, plus the
+share of defaults caught and the default rate in each 1% risk band.
+
+![What if we changed the cut-off?](docs/screenshots/tableau_2_cut_off.png)
+
+### 3. Is anything changing?
+Month-on-month change in each of 12 model inputs, coloured green, amber or
+red against the same limits the alerts use, for the monitored or the
+validation period. Choosing an input shows its monthly change as a bar chart.
+
+![Is anything changing?](docs/screenshots/tableau_3_is_anything_changing.png)
+
+### 4. Alerts and technical detail
+The alert log with plain-English messages, a test vs validation scorecard
+(AUC, lift, recall, predicted vs actual default rate, Brier score), predicted
+vs actual default rate across ten risk groups on the test set, and a note on
+the data, the model and how the dashboard is refreshed.
+
+![Alerts and technical detail](docs/screenshots/tableau_4_alerts_and_detail.png)
 
 ---
 
@@ -397,7 +425,8 @@ See `MODEL_CARD.md` § Limitations for the complete list.
 ---
 
 ## Tech stack
-- **Cloud:** Google Cloud Platform (BigQuery, Cloud Shell, Looker Studio)
+- **Cloud:** Google Cloud Platform (BigQuery, Cloud Shell)
+- **Visualization:** Tableau
 - **Modeling:** Python, scikit-learn, XGBoost
 - **Data:** Lending Club public loan-level dataset
 - **Monitoring:** BigQuery SQL + Python orchestration
