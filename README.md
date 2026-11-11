@@ -11,6 +11,8 @@ ingest → feature engineering (BigQuery SQL) → calibrated XGBoost model →
 batch scoring → drift monitoring → threshold-based alerting → Tableau
 dashboard.
 
+**[View the live dashboard on Tableau Public](https://public.tableau.com/app/profile/pranav.sai.ramesh/viz/credit_risk_monitoring/1-Isthemodelworking)**
+
 The architecture is **BigQuery-first**: every artifact (features, predictions,
 metrics, drift, alerts) lives in BigQuery, giving the system an auditable,
 queryable history of every run.
@@ -201,6 +203,8 @@ chmod +x run_monitoring.sh
 ---
 
 ## Tableau dashboard
+
+**Live version: [Credit Risk Model Monitor on Tableau Public](https://public.tableau.com/app/profile/pranav.sai.ramesh/viz/credit_risk_monitoring/1-Isthemodelworking)**
 
 A four-page Tableau workbook,
 [`tableau/credit_risk_monitoring.twbx`](tableau/credit_risk_monitoring.twbx),
