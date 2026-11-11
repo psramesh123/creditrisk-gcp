@@ -3,7 +3,7 @@
 This project uses BigQuery as the system of record for everything: raw
 data, engineered features, model predictions, evaluation metrics, drift
 statistics, and alerts. Python scripts handle ingestion, ctraining, soring,
-and monitoring orchestration. Visualization is in Looker Studio.
+and monitoring orchestration. Visualization is in Tableau.
 
 The design is deliberately simple — no Vertex AI Pipelines, no Cloud
 Composer, no Cloud Run service — because the goal is an auditable,
@@ -44,11 +44,13 @@ they can `SELECT` from.
    ┌─────────────────────────────────────────────────────────────┐
    │ score_drift │ feature_drift │ monitoring_rollups │ alerts   │
    └──────┬──────────────────────────────────────────────────────┘
-          │  Looker Studio (queries *_latest views)
+          │  sql/07_dashboard_views.sql (dash_* views)
+          │  tableau/export_data.sh (views → CSV)
           ▼
-   ┌────────────────────────┐
-   │ Dashboard              │
-   └────────────────────────┘
+   ┌──────────────────────────────────────┐
+   │ tableau/extracts/*.csv → Tableau     │
+   │ credit_risk_monitoring.twbx          │
+   └──────────────────────────────────────┘
 ```
 
 ---
@@ -165,19 +167,26 @@ bq query --use_legacy_sql=false < sql/monitoring/12_alert_categorical_share.sql
 Each monitoring SQL file is idempotent: it `INSERT`s a fresh batch of rows
 keyed by run timestamp, so historical state is preserved.
 
-### 6) Visualization (Looker Studio)
-The dashboard queries `*_latest` views (e.g.
-`creditrisk.monitoring_rollups_latest`) which select the most recent run
-for a given `model_version` / `split`. This separation of *run history*
-(in the base tables) from *current state* (in the views) keeps the
-dashboard fast and the history queryable.
+### 6) Visualization (Tableau)
+`sql/07_dashboard_views.sql` defines `dash_*` views that read the latest
+run of each monitoring table and shape it for the dashboard: plain-English
+feature names, 1% risk bands, monthly predicted vs actual default rates,
+drift status per feature and month, and alert messages written for business
+readers.
+
+`tableau/export_data.sh` exports those views to `tableau/extracts/*.csv`
+(`run_monitoring.sh` runs it as its last step). The CSVs are small
+aggregates with no loan-level rows, so they are committed and the workbook
+`tableau/credit_risk_monitoring.twbx` opens without a BigQuery connection.
+Run history stays in the BigQuery base tables; the dashboard shows the
+current state.
 
 Pages:
-- Executive Summary (VALID vs TEST KPIs)
-- Lift / Recall Performance
-- Score Drift over time
-- Feature Drift (with feature selector)
-- Alerts
+- Is the model working? (health status, headline numbers, monthly trend)
+- What if we changed the cut-off? (interactive decline-rate slider)
+- Is anything changing? (feature drift heatmap with a feature selector)
+- Alerts and technical detail (alert log, scorecard, calibration by risk
+  group)
 
 ---
 
