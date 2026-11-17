@@ -217,6 +217,13 @@ the `dash_*` views in `sql/07_dashboard_views.sql`;
 `tableau/export_data.sh` re-exports them, and `run_monitoring.sh` calls it
 as its last step.
 
+**Which model is monitored:** the dashboard tracks the deployed model,
+version `20260430-002800`, trained on the full feature set (including
+Lending Club's grade and interest rate, which is why both appear on the
+drift page). The reason codes below use `no_lc_strict`, the model with no
+access to the grade, so that every reason describes the applicant. See
+[What the reason codes uncovered](#what-the-reason-codes-uncovered-an-interest-rate-leak).
+
 ### 1. Is the model working?
 A one-line health status with a plain-English reason, four headline numbers
 (lift in the riskiest 5%, defaults found in the riskiest 10%, predicted vs

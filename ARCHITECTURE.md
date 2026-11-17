@@ -2,7 +2,7 @@
 
 This project uses BigQuery as the system of record for everything: raw
 data, engineered features, model predictions, evaluation metrics, drift
-statistics, and alerts. Python scripts handle ingestion, ctraining, soring,
+statistics, and alerts. Python scripts handle ingestion, training, scoring,
 and monitoring orchestration. Visualization is in Tableau.
 
 The design is deliberately simple — no Vertex AI Pipelines, no Cloud

@@ -107,9 +107,9 @@ CLUSTER BY alert_type, severity;
 -- *_latest views
 --
 -- Each view returns rows from the corresponding base table, but only for
--- the most recent run per (model_version, split). The Looker Studio
--- dashboard queries these views so it always shows current state without
--- needing to filter on `ts` manually.
+-- the most recent run per (model_version, split). The dash_* views in
+-- 07_dashboard_views.sql build on these, so the Tableau dashboard always
+-- shows current state without needing to filter on `ts` manually.
 -- ============================================================================
  
 -- ----------------------------------------------------------------------------
