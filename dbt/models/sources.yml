@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: creditrisk
+    database: project-01523b1d-fc19-4c00-97e
+    schema: creditrisk
+    tables:
+      - name: loans_raw
+        description: Raw Lending Club loans, all columns as STRING.
