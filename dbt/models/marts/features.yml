@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: features
+    description: >
+      Model-ready Lending Club loans, one row per loan, with an out-of-time
+      train / valid / test split. Read by src/train/train.py.
+    columns:
+      - name: loan_id
+        description: Lending Club loan identifier.
+        data_tests:
+          - unique
+          - not_null
+      - name: issue_date
+        data_tests:
+          - not_null
+      - name: label
+        description: 1 = defaulted (charged off, default or 16+ days late), 0 = fully paid.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+                quote: false
+      - name: term_months
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [36, 60]
+                quote: false
+      - name: split
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['train', 'valid', 'test']

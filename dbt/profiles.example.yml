@@ -1,0 +1,11 @@
+# Copy to ~/.dbt/profiles.yml and set your own project and location.
+creditrisk:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: oauth
+      project: your-gcp-project-id
+      dataset: creditrisk_dbt
+      location: northamerica-northeast1
+      threads: 4
