@@ -7,9 +7,9 @@ Platform, using the Lending Club public dataset.
 
 The project demonstrates a complete MLOps loop:
 
-ingest → feature engineering (BigQuery SQL) → calibrated XGBoost model →
+ingest → feature engineering (dbt on BigQuery) → calibrated XGBoost model →
 batch scoring → drift monitoring → threshold-based alerting → Tableau
-dashboard.
+dashboard, orchestrated end to end as an Airflow DAG.
 
 **[View the live dashboard on Tableau Public](https://public.tableau.com/app/profile/pranav.sai.ramesh/viz/credit_risk_monitoring/1-Isthemodelworking)**
 
@@ -68,6 +68,9 @@ slice; early stopping at 1,390 of 2,000 trees on validation logloss.
 - **Traceable models**: every artifact records the git commit it was trained
   from, and flags uncommitted changes
 - **Continuous integration**: lint and synthetic tests run on every push
+- **dbt feature pipeline**: staging → intermediate → mart models with 11 data
+  tests, reconciled row-for-row against the original SQL
+- **Airflow orchestration**: one DAG runs dbt build → training → monitoring
 
 See [`MODEL_CARD.md`](./MODEL_CARD.md) for the full label definition,
 limitations, and methodology notes. See [`ARCHITECTURE.md`](./ARCHITECTURE.md)
@@ -83,6 +86,12 @@ creditrisk-gcp/
 ├── ARCHITECTURE.md            # data flow + table responsibilities
 ├── MODEL_CARD.md              # label definition, metrics, limitations
 ├── run_monitoring.sh          # one-command monitoring refresh
+├── dbt/                       # feature pipeline as dbt models + tests
+│   ├── models/{staging,intermediate,marts}/
+│   ├── tests/                 # singular data tests
+│   └── lineage_graph_dbt_creditrisk.png
+├── airflow/
+│   └── dags/creditrisk_pipeline.py  # dbt build >> train >> monitoring
 ├── start.sh                   # session bootstrap (gcloud config, env vars)
 ├── data/                      # local CSV input (loans.csv, gitignored)
 ├── artifacts/                 # trained model artifact (model.joblib, gitignored)
@@ -154,6 +163,8 @@ python -m src.ingest.upload_and_load
 bq query --use_legacy_sql=false < sql/02_build_features.sql
 ```
 This produces `creditrisk.features` with the train / valid / test split.
+The same table is also built and tested by dbt (`creditrisk_dbt.features`);
+see [Feature pipeline in dbt](#feature-pipeline-in-dbt).
 
 ### 5) Train calibrated model and log metrics
 ```bash
@@ -179,6 +190,110 @@ export SCORE_SPLIT=test  && python src/train/score_to_bigquery.py
 chmod +x run_monitoring.sh
 ./run_monitoring.sh
 ```
+
+---
+
+## Feature pipeline in dbt
+
+The feature SQL (`sql/02_build_features.sql`) is rebuilt as a
+[dbt](https://www.getdbt.com/) project in `dbt/`, so every transformation step
+is a versioned model with tests and documented lineage.
+
+```
+creditrisk.loans_raw  (source)
+  → stg_loans           view   typed columns, consistent names
+  → int_loans_clean     view   label, de-duplication, maturity guard, filters
+  → features            table  out-of-time train / valid / test split
+```
+
+![dbt lineage graph](dbt/lineage_graph_dbt_creditrisk.png)
+
+| Layer | Model | What it does |
+|---|---|---|
+| Staging | `stg_loans` | `safe_cast`s raw strings to numbers and dates, renames columns |
+| Intermediate | `int_loans_clean` | Builds the default label (charged off / default / 16+ days late = 1, fully paid = 0; unresolved loans dropped), keeps one row per `loan_id`, applies the 2017-12-01 maturity guard, derives `credit_history_years` |
+| Mart | `features` | Splits by issue date: earliest 80% train, next 10% valid, latest 10% test |
+
+**Tests (11, run with every build).**
+- Generic tests on `features`:
+  - `loan_id` is unique and not null.
+  - `issue_date`, `label` and `split` are not null.
+  - `label` ∈ {0, 1}, `term_months` ∈ {36, 60} and `split` ∈ {train, valid, test}.
+- Three singular tests in `dbt/tests/`:
+  - the time split is ordered (every train date comes before every valid date, and every valid date before every test date);
+  - no loan is issued after the maturity guard;
+  - FICO scores fall in 300–850.
+
+**Reconciliation.** Before switching over, the dbt table was compared with the
+original `creditrisk.features` loan by loan: 1,305,390 loans, with zero
+mismatches on label or split, and staging row counts equal to the raw table
+(2,260,701).
+
+### Run it
+
+```bash
+cd dbt
+pip install -r requirements.txt            # dbt-core 1.12, dbt-bigquery 1.12
+cp profiles.example.yml ~/.dbt/profiles.yml   # set your project / dataset
+export DBT_ENGINE_MANAGE_STATE=false       # skip dbt's hosted state sign-in
+dbt debug                                  # check the BigQuery connection
+dbt build                                  # run models + tests (PASS=14)
+dbt docs generate && dbt docs serve        # browse docs and the lineage graph
+```
+
+Models are written to the `creditrisk_dbt` dataset in `northamerica-northeast1`.
+Training reads them by setting
+`FEATURES_TABLE=<project>.creditrisk_dbt.features`.
+
+---
+
+## Orchestration with Airflow
+
+`airflow/dags/creditrisk_pipeline.py` runs the whole pipeline as one Airflow
+DAG, with each step starting only after the previous one succeeds:
+
+```
+dbt_build  >>  train_model  >>  run_monitoring
+```
+
+| Task | Runs | Result |
+|---|---|---|
+| `dbt_build` | `dbt build` | features rebuilt and all 11 tests passed |
+| `train_model` | `src/train/train.py` | data validated, model trained and calibrated on the dbt table |
+| `run_monitoring` | `run_monitoring.sh` | valid + test rescored, drift tables refreshed, alerts run |
+
+Each task is a `BashOperator` that loads the project environment
+(`start.sh`) and points every script at the dbt-built table, so the model is
+always trained and scored on data that has just passed the dbt tests. The DAG
+has no schedule (`schedule=None`); it is triggered manually.
+
+### Run it (Airflow 3.4, local)
+
+```bash
+python -m venv .venv-airflow && source .venv-airflow/bin/activate
+pip install -r airflow/requirements.txt
+export AIRFLOW_HOME=~/creditrisk-gcp/airflow
+export AIRFLOW__CORE__LOAD_EXAMPLES=False
+airflow db migrate
+
+airflow dags list | grep creditrisk_pipeline        # confirm it parsed
+airflow tasks test creditrisk_pipeline dbt_build    # one task
+airflow dags test creditrisk_pipeline               # full run (~15-20 min)
+```
+
+Airflow is installed in its own virtualenv to keep its dependencies apart
+from the modelling stack. The DAG's tasks activate the main `.venv` themselves.
+
+**Notes from setting it up**
+- A `bash_command` ending in `.sh` is treated by Airflow as a Jinja template
+  *file* and fails with `TemplateNotFound`, so the monitoring task appends
+  `&& echo monitoring_done`.
+- The local setup uses SQLite, which logs a harmless `MissingGreenlet`
+  traceback when a test run shuts down. Check the task state line
+  (`Task instance in success state`), not the last lines of the log.
+- Cloud Shell stops background jobs when the session times out, so a full
+  run needs the session kept active. A production setup would run on Cloud
+  Composer or a VM with a Postgres metadata database.
 
 ---
 
@@ -436,4 +551,6 @@ See `MODEL_CARD.md` § Limitations for the complete list.
 - **Visualization:** Tableau
 - **Modeling:** Python, scikit-learn, XGBoost
 - **Data:** Lending Club public loan-level dataset
-- **Monitoring:** BigQuery SQL + Python orchestration
+- **Transformation:** dbt (dbt-bigquery), with data tests and lineage docs
+- **Orchestration:** Apache Airflow 3 (DAG: dbt → train → monitor)
+- **Monitoring:** BigQuery SQL alerts + Python
