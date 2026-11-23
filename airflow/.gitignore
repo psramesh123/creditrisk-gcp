@@ -1,0 +1,7 @@
+airflow.db*
+airflow.cfg
+logs/
+*.log
+*.pid
+simple_auth_manager_passwords.json*
+__pycache__/

@@ -41,3 +41,4 @@ artifacts/
 
 # Tableau autosave/recovery files
 *.twbr
+.venv-airflow/
